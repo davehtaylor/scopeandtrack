@@ -22,8 +22,11 @@ bcrypt = Bcrypt(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = "localhost"
 db = SQLAlchemy(app)
 
+def hello():
+    return "Hello!"
 
-
+if __name__ == "__main__":
+    app.run()
 
 
 
