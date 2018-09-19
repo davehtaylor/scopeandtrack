@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 
 
-# Function for encryption and validation
+# Functions for encryption and validation
 # password_hash = bcrypt.generate_password_hash(password).decode("utf-8")
 # bcrypt.check_password_hash(password_hash, user_input)
 
@@ -22,8 +22,8 @@ bcrypt = Bcrypt(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = "localhost"
 db = SQLAlchemy(app)
 
-def hello():
-    return "Hello!"
+
+
 
 if __name__ == "__main__":
     app.run()
