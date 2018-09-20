@@ -60,20 +60,20 @@ class HelloWorld(Resource):
 
 
 @app.route("/organizations", methods=["GET"])
-def getOrgs(self, name):
+def getOrgs():
     orgs = organizations.query.all()
     return jsonify(orgs)
 
 
-def post(self, name):
+def post():
 
 
 
-def put(self, name):
+def put():
 
 
 
-def delete(self, name):
+def delete():
 
 api.add_resource(HelloWorld, '/')
 api.add_resource(organizations, "/organizations")
