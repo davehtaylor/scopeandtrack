@@ -73,6 +73,7 @@ def put(self, name):
 def delete(self, name):
 
 api.add_resource(organizations, "/organizations")
+api.init_app(app)
 
 if __name__ == "__main__":
     db.create_all()
