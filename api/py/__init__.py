@@ -39,8 +39,7 @@ class organizations(db.Model):
     primaryContact = db.Column(db.String(255))
 
 
-    def __init__(self, orgID, name, address1, address2, city, state, zipCode,
-                 country, phone1, phone2, email1, email2, primaryContact)
+    def __init__(self, orgID, name, address1, address2, city, state, zipCode, country, phone1, phone2, email1, email2, primaryContact)
         self.orgID = orgID
         self.name = name
         self.address1 = address1
