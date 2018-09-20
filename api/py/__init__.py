@@ -54,6 +54,8 @@ class organizations(db.Model):
         self.email2 = email2
         self.primaryContact = primaryContact
 
+
+@app.route("/", methods=["GET"])
 class HelloWorld(Resource):
     def get(self):
         return {"Hello": "World"}
@@ -75,8 +77,8 @@ def getOrgs():
 
 # def delete():
 
-api.add_resource(HelloWorld, '/')
-api.add_resource(organizations, "/organizations")
+#api.add_resource(HelloWorld, '/')
+#api.add_resource(organizations, "/organizations")
 
 if __name__ == "__main__":
     db.create_all()
