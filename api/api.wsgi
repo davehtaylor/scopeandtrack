@@ -5,4 +5,4 @@ import logging
 logging.basicConfig(stream=sys.stderr)
 sys.path.insert(0,"/var/www/scopeandtrack/public_html/api/py")
 
-from FlaskApp import app as application
+from __init.py__ import app as application
