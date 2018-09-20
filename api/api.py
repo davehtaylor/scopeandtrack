@@ -9,11 +9,11 @@ from flask_bcrypt import Bcrypt
 # # bcrypt.check_password_hash(password_hash, user_input)
 
 
-# # Create the app
-# app = Flask(__name__)
+# Create the app
+app = Flask(__name__)
 
-# # Create the API
-# api = Api(app)
+# Create the API
+#api = Api(app)
 
 # # Setup our Bcrypt encryption
 # bcrypt = Bcrypt(app)
