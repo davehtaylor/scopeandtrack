@@ -56,21 +56,21 @@ class organizations(db.Model):
         self.primaryContact = primaryContact
 
 
-    @app.route("/organizations", methods=["GET"])
-    def get(self, name):
-        orgs = organizations.query.all()
-        return orgs
+@app.route("/organizations", methods=["GET"])
+def getOrgs(self, name):
+    orgs = organizations.query.all()
+    return jsonify(orgs)
 
 
-    def post(self, name):
-
-
-
-    def put(self, name):
+def post(self, name):
 
 
 
-    def delete(self, name):
+def put(self, name):
+
+
+
+def delete(self, name):
 
 
 
