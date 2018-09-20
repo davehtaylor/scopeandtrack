@@ -55,13 +55,13 @@ class organizations(db.Model):
         self.primaryContact = primaryContact
 
 
-@app.route("/api", methods=["GET"])
+@app.route("/", methods=["GET"])
 class HelloWorld(Resource):
     def get(self):
         return {"Hello": "World"}
 
 
-@app.route("/api/organizations", methods=["GET"])
+@app.route("/organizations", methods=["GET"])
 def getOrgs():
     orgs = organizations.query.all()
     return jsonify(orgs)
