@@ -54,7 +54,7 @@ class organizations(db.Model):
         self.email2 = email2
         self.primaryContact = primaryContact
 
-class HelloWorld(Resource)
+class HelloWorld(Resource):
     def get(self):
         return {"Hello": "World"}
 
