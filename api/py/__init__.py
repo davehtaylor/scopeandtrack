@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, jsonify
 from flask_restful import Api, Resource, reqparse
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
@@ -55,13 +55,13 @@ class organizations(db.Model):
         self.primaryContact = primaryContact
 
 
-@app.route("/", methods=["GET"])
+@app.route("/api", methods=["GET"])
 class HelloWorld(Resource):
     def get(self):
         return {"Hello": "World"}
 
 
-@app.route("/organizations", methods=["GET"])
+@app.route("/api/organizations", methods=["GET"])
 def getOrgs():
     orgs = organizations.query.all()
     return jsonify(orgs)
