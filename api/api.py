@@ -55,10 +55,9 @@ app = Flask(__name__)
 #         self.primaryContact = primaryContact
 
 
-# @app.route("/", methods=["GET"])
-# class HelloWorld(Resource):
-#     def get(self):
-#         return {"Hello": "World"}
+@app.route("/api", methods=["GET"])
+def hello():
+    return "Hello world!"
 
 
 # @app.route("/organizations", methods=["GET"])
@@ -77,31 +76,31 @@ app = Flask(__name__)
 
 # def delete():
 
-tasks = [
-    {
-        'id': 1,
-        'title': u'Buy groceries',
-        'description': u'Milk, Cheese, Pizza, Fruit, Tylenol', 
-        'done': False
-    },
-    {
-        'id': 2,
-        'title': u'Learn Python',
-        'description': u'Need to find a good Python tutorial on the web', 
-        'done': False
-    }
-]
+# tasks = [
+#     {
+#         'id': 1,
+#         'title': u'Buy groceries',
+#         'description': u'Milk, Cheese, Pizza, Fruit, Tylenol', 
+#         'done': False
+#     },
+#     {
+#         'id': 2,
+#         'title': u'Learn Python',
+#         'description': u'Need to find a good Python tutorial on the web', 
+#         'done': False
+#     }
+# ]
 
-@app.route('/api/tasks', methods=['GET'])
-def get_tasks():
-    return jsonify({'tasks': tasks})
+# @app.route('/api/tasks', methods=['GET'])
+# def get_tasks():
+#     return jsonify({'tasks': tasks})
 
-if __name__ == '__main__':
-    app.run()
-
-# if __name__ == "__main__":
-#     db.create_all()
+# if __name__ == '__main__':
 #     app.run()
+
+if __name__ == "__main__":
+#     db.create_all()
+    app.run()
 
 
 
