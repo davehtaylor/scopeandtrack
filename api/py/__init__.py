@@ -65,15 +65,15 @@ def getOrgs():
     return jsonify(orgs)
 
 
-def post():
+# def post():
 
 
 
-def put():
+# def put():
 
 
 
-def delete():
+# def delete():
 
 api.add_resource(HelloWorld, '/')
 api.add_resource(organizations, "/organizations")
