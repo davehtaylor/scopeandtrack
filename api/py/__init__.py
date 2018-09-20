@@ -56,11 +56,6 @@ class organizations(db.Model):
         self.primaryContact = primaryContact
 
 
-@app.route("/")
-def home()
-    return "Hello world!"
-
-
 @app.route("/organizations", methods=["GET"])
 def getOrgs(self, name):
     orgs = organizations.query.all()
@@ -77,7 +72,7 @@ def put(self, name):
 
 def delete(self, name):
 
-
+api.add_resource(organizations, "/organizations")
 
 if __name__ == "__main__":
     db.create_all()
