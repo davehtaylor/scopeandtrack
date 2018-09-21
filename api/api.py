@@ -63,7 +63,8 @@ def hello():
 @app.route("/api/organizations", methods=["GET"])
 def getOrgs():
     orgs = organizations.query.all()
-    return jsonify({"organizations": orgs})
+    #return jsonify({"organizations": orgs})
+    return orgs
 
 
 
