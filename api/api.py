@@ -56,7 +56,7 @@ app = Flask(__name__)
 
 
 
-@app.route("/api", methods=["GET"])
+@app.route("/api/test", methods=["GET"])
 def test():
     return "Hello World!"
 
