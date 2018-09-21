@@ -24,7 +24,7 @@ db = SQLAlchemy(app)
 
 
 class organizations(db.Model):
-    orgID = db.Column('orgID', db.Integer, primary_key = True, unique = True)
+    orgID = db.Column(db.Integer, primary_key = True, unique = True)
     name = db.Column(db.String(255), unique = True)
     address1 = db.Column(db.String(255))
     address2 = db.Column(db.String(255))
