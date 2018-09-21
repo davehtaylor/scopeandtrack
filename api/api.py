@@ -80,7 +80,7 @@ def hello():
 
 @app.route("/api/organizations", methods=["GET"])
 def getOrgs():
-    orgs = o.toJSON() for o in organizations.query.all()
+    orgs = [o.toJSON() for o in organizations.query.all()]
     #return jsonify({"organizations": orgs})
     return orgs
 
