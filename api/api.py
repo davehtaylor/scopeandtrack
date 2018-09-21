@@ -4,9 +4,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 
 
-# # Functions for encryption and validation
-# # password_hash = bcrypt.generate_password_hash(password).decode("utf-8")
-# # bcrypt.check_password_hash(password_hash, user_input)
+# Functions for encryption and validation
+# password_hash = bcrypt.generate_password_hash(password).decode("utf-8")
+# bcrypt.check_password_hash(password_hash, user_input)
 
 
 # Create the app
@@ -43,78 +43,26 @@ class organizations(db.Model):
         self.orgID = orgID
         self.name = name
         self.address1 = address1
-
-        if address2 != None:
-            self.address2 = address2
-        else:
-            self.address2 = ""
-        
+        self.address2 = address2
         self.city = city
         self.state = state
         self.zipCode = zipCode
         self.country = country
         self.phone1 = phone1
-        
-        if phone2 != None:
-            self.phone2 = phone2
-        else:
-            self.phone2 = ""
-        
+        self.phone2 = phone2
         self.email1 = email1
-        
-        if email2 != None:
-            self.email2 = email2
-        else:
-            self.email2 = ""
-        
+        self.email2 = email2
         self.primaryContact = primaryContact
-
-
-# @app.route("/api/hello", methods=["GET"])
-# def hello():
-#     return "Hello world!"
 
 
 @app.route("/api/organizations", methods=["GET"])
 def getOrgs():
-    orgs = organizations.query.all()
-    return jsonify({"organizations": data=orgs})
+    orgs = organizations.query.filter(organizations.address2 != None).all()
+    return jsonify({"organizations": orgs})
 
 
-# def post():
-
-
-
-# def put():
-
-
-
-# def delete():
-
-# tasks = [
-#     {
-#         'id': 1,
-#         'title': u'Buy groceries',
-#         'description': u'Milk, Cheese, Pizza, Fruit, Tylenol', 
-#         'done': False
-#     },
-#     {
-#         'id': 2,
-#         'title': u'Learn Python',
-#         'description': u'Need to find a good Python tutorial on the web', 
-#         'done': False
-#     }
-# ]
-
-# @app.route('/api/tasks', methods=['GET'])
-# def get_tasks():
-#     return jsonify({'tasks': tasks})
-
-# if __name__ == '__main__':
-#     app.run()
 
 if __name__ == "__main__":
-    #db.create_all()
     app.run()
 
 
