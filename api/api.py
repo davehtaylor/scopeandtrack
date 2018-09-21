@@ -57,8 +57,9 @@ class organizations(db.Model):
 
 @app.route("/api/organizations", methods=["GET"])
 def getOrgs():
-    orgs = organizations.query.all(1)
-    return jsonify({"organizations": orgs})
+    orgs = organizations.query.all()
+    return orgs
+    #return jsonify({"organizations": orgs})
 
 
 
