@@ -19,7 +19,7 @@ app = Flask(__name__)
 # bcrypt = Bcrypt(app)
 
 # Setup database connection
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://scopeandtrackAdmin:T@ylor8575@localhost/scopeandtrack"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://scopeandtrackAdmin:T@ylor8575@localhost/scopeandtrack"
 db = SQLAlchemy(app)
 
 
@@ -114,7 +114,7 @@ def getOrgs():
 #     app.run()
 
 if __name__ == "__main__":
-    db.create_all()
+    #db.create_all()
     app.run()
 
 
