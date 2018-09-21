@@ -43,15 +43,24 @@ class organizations(db.Model):
         self.orgID = orgID
         self.name = name
         self.address1 = address1
-        self.address2 = address2
+        if address2 != None:
+            self.address2 = address2
+        else:
+            self.address2 = ""
         self.city = city
         self.state = state
         self.zipCode = zipCode
         self.country = country
         self.phone1 = phone1
-        self.phone2 = phone2
+        if phone2 != None:
+            self.phone2 = phone2
+        else:
+            self.phone2 = ""
         self.email1 = email1
-        self.email2 = email2
+        if email2 != None:
+            self.email2 = email2
+        else:
+            self.email2 = ""
         self.primaryContact = primaryContact
 
 
