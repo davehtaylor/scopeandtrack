@@ -55,6 +55,11 @@ class organizations(db.Model):
         self.primaryContact = primaryContact
 
 
+@app.route("/api", methods=["GET"])
+def hello():
+    return "Hello World!"
+
+
 @app.route("/api/organizations", methods=["GET"])
 def getOrgs():
     orgs = organizations.query.all()
