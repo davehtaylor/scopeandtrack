@@ -134,7 +134,7 @@ def createOrg():
 
     incoming = request.get_json()
 
-    org = organizations(incoming.get("name"), incoming.get("address1"), incoming.get("address2"),
+    org = organizations(None, incoming.get("name"), incoming.get("address1"), incoming.get("address2"),
                         incoming.get("city"), incoming.get("state"), incoming.get("zipCode"),
                         incoming.get("country"), incoming.get("phone1"), incoming.get("phone2"),
                         incoming.get("email1"), incoming.get("email2"), incoming.get("primaryContact"))
