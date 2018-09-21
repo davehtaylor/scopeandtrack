@@ -134,10 +134,10 @@ def createOrg():
 
     incoming = request.get_json()
 
-    org = organization(incoming.get("name"), incoming.get("address1"), incoming.get("address2"),
-                       incoming.get("city"), incoming.get("state"), incoming.get("zipCode"),
-                       incoming.get("country"), incoming.get("phone1"), incoming.get("phone2"),
-                       incoming.get("email1"), incoming.get("email2"), incoming.get("primaryContact"))
+    org = organizations(incoming.get("name"), incoming.get("address1"), incoming.get("address2"),
+                        incoming.get("city"), incoming.get("state"), incoming.get("zipCode"),
+                        incoming.get("country"), incoming.get("phone1"), incoming.get("phone2"),
+                        incoming.get("email1"), incoming.get("email2"), incoming.get("primaryContact"))
 
     db.session.add(org)
     db.session.commit()
