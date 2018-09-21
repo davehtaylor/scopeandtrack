@@ -55,7 +55,7 @@ app = Flask(__name__)
 #         self.primaryContact = primaryContact
 
 
-@app.route("/api", methods=["GET"])
+@app.route("/api/hello", methods=["GET"])
 def hello():
     return "Hello world!"
 
