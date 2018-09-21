@@ -127,7 +127,9 @@ def createOrg():
     """
     mandatory = ["name", "address1", "city", "state", "zipCode", "country", 
                  "phone1", "email1", "primaryContact"]
-    if not request.json or not any(mandatory) in request.json:
+
+    #if not request.json or not all(mandatory) in request.json:
+    if not request.json:
         abort(400)
 
     incoming = request.get_json()
