@@ -125,9 +125,9 @@ def createOrg():
     Return a 400 Bad Request code if there's a problem.
     We'll return a 201 Suceess code for a successful creation. 
     """
-    if not request.json or not any("name", "address1", "city", "state", 
-                                   "zipCode", "country", "phone1", "email1", 
-                                   "primaryContact") in request.json:
+    mandatory = ["name", "address1", "city", "state", "zipCode", "country", 
+                 "phone1", "email1", "primaryContact"]
+    if not request.json or not any(mandatory) in request.json:
         abort(400)
 
     incoming = request.get_json()
