@@ -55,6 +55,24 @@ class organizations(db.Model):
         self.primaryContact = primaryContact
 
 
+    def toJSON(self):
+        return {
+            "orgID": self.orgID
+            "name": self.name
+            "address1": self.address1
+            "address2": self.address2
+            "city": self.city
+            "state": self.state
+            "zipCode": self.zipCode
+            "country": self.country
+            "phone1": self.phone1
+            "phone2": self.phone2
+            "email1": self.email1
+            "email2": self.email2
+            "primaryContact": self.primaryContact
+        }
+
+
 @app.route("/api/hello", methods=["GET"])
 def hello():
     return "Hello World!"
@@ -62,7 +80,7 @@ def hello():
 
 @app.route("/api/organizations", methods=["GET"])
 def getOrgs():
-    orgs = organizations.query.all()
+    orgs = o.toJSON() for o in organizations.query.all()
     #return jsonify({"organizations": orgs})
     return orgs
 
