@@ -24,6 +24,9 @@ db = SQLAlchemy(app)
 
 
 class organizations(db.Model):
+    """
+    address2, phone2, and email2 are optional
+    """
     orgID = db.Column(db.Integer, primary_key = True, unique = True)
     name = db.Column(db.String(255), unique = True)
     address1 = db.Column(db.String(255))
@@ -38,8 +41,8 @@ class organizations(db.Model):
     email2 = db.Column(db.String(255))
     primaryContact = db.Column(db.String(255))
 
-
-    def __init__(self, orgID, name, address1, address2, city, state, zipCode, country, phone1, phone2, email1, email2, primaryContact):
+    def __init__(self, orgID, name, address1, address2, city, state, zipCode, 
+                 country, phone1, phone2, email1, email2, primaryContact):
         self.orgID = orgID
         self.name = name
         self.address1 = address1
@@ -54,8 +57,11 @@ class organizations(db.Model):
         self.email2 = email2
         self.primaryContact = primaryContact
 
-
     def toJSON(self):
+        """
+        Create a serializable representation of our data, so we can return
+        JSON from our DB queries
+        """
         return {
             "orgID": self.orgID,
             "name": self.name,
@@ -73,17 +79,103 @@ class organizations(db.Model):
         }
 
 
-@app.route("/api/hello", methods=["GET"])
-def hello():
-    return "Hello World!"
+class users(db.Model):
+    userID = db.Column(db.Integer, primary_key = True, unique = True)
+    firstName = db.Column(db.String(255))
+    lastName = db.Column(db.String(255))
+    username = db.Column(db.String(255))
+    salt = db.Column(db.String(255))
+    password = db.Column(db.String(255))
+    privLevel = db.Column(db.Integer)
+    orgID = db.Column(db.Integer)
+
+    def __init__(self, userID, firstName, lastName, username, salt, 
+                 password, privLevel, orgID):
+        self.userID = userID
+        self.firstName = firstName
+        self.lastName = lastName
+        self.username = username
+        self.salt = salt
+        self.password = password
+        self.privLevel = privLevel
+        self.orgID = orgID
+
+    def toJSON(self):
+        """
+        Create a serializable representation of our data, so we can return
+        JSON from our DB queries
+        """
+        return {
+            "userID": self.userID,
+            "firstName": self.firstName,
+            "lastName": self.lastName,
+            "username": self.username,
+            "salt": self.salt,
+            "password": self.password,
+            "privLevel": self.privLevel,
+            "orgID": self.orgID
+        }
+
+
+@app.route("/api/organizations", methods=["POST"])
+def createOrg():
+    """
+    Create organizations. Ensure that we recieve a JSON request, and that it
+    contains the mandatory fields. address2, phone2, and email2 are optional.
+    Return a 400 Bad Request code if there's a problem.
+    We'll return a 201 Suceess code for a successful creation. 
+    """
+    if not request.json or not any("name", "address1", "city", "state", 
+                                   "zipCode", "country", "phone1", "email1", 
+                                   "primaryContact") in request.json:
+        abort(400)
+
+    incoming = request.get_json()
+
+    org = organization(incoming.get("name"), incoming.get("address1"), incoming.get("address2"),
+                       incoming.get("city"), incoming.get("state"), incoming.get("zipCode"),
+                       incoming.get("country"), incoming.get("phone1"), incoming.get("phone2"),
+                       incoming.get("email1"), incoming.get("email2"), incoming.get("primaryContact"))
+
+    db.session.add(org)
+    db.session.commit()
+    return jsonify({"organization": org.toJSON()}), 201
+
+
+@app.route("/api/organizations/<int:id>/", methods=["PUT"])
+def updateOrg(id):
+    """
+    Update organization info
+    """
+    return null
 
 
 @app.route("/api/organizations", methods=["GET"])
 def getOrgs():
+    """
+    List all organizations
+    """
     orgs = [o.toJSON() for o in organizations.query.all()]
     return jsonify({"organizations": orgs})
 
 
+@app.route("/api/organizations/<int:id>/", methods=["GET"])
+def getOrgByID(id):
+    """
+    Select organization by id
+    """
+    org = organizations.query.all(id).toJSON()
+    return jsonify({"organizations": org})
+
+
+@app.route("/api/organizations/<int:id>/", methods=["DELETE"])
+def deleteOrg(id):
+    """
+    Delete organization
+    """
+    return null
+
 
 if __name__ == "__main__":
     app.run()
+
