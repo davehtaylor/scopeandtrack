@@ -77,7 +77,8 @@ class organizations(db.Model):
 
 @app.route("/api/organizations", methods=["GET"])
 def getOrgs():
-    return jsonify({"organizations": orgs = organizations.query.all()})
+    orgs = organizations.query.all()
+    return jsonify({"organizations": data=orgs})
 
 
 # def post():
@@ -113,7 +114,7 @@ def getOrgs():
 #     app.run()
 
 if __name__ == "__main__":
-#     db.create_all()
+    db.create_all()
     app.run()
 
 
