@@ -28,18 +28,18 @@ class organizations(db.Model):
     address2, phone2, and email2 are optional
     """
     orgID = db.Column(db.Integer, primary_key = True, unique = True)
-    name = db.Column(db.String(255), unique = True)
-    address1 = db.Column(db.String(255))
+    name = db.Column(db.String(255), unique = True, nullable = False)
+    address1 = db.Column(db.String(255), nullable = False)
     address2 = db.Column(db.String(255))
-    city = db.Column(db.String(255))
-    state = db.Column(db.String(2))
-    zipCode = db.Column(db.Integer)
-    country = db.Column(db.String(2))
-    phone1 = db.Column(db.BigInteger)
+    city = db.Column(db.String(255), nullable = False)
+    state = db.Column(db.String(2), nullable = False)
+    zipCode = db.Column(db.Integer, nullable = False)
+    country = db.Column(db.String(2), nullable = False)
+    phone1 = db.Column(db.BigInteger, nullable = False)
     phone2 = db.Column(db.BigInteger)
-    email1 = db.Column(db.String(255))
+    email1 = db.Column(db.String(255), nullable = False)
     email2 = db.Column(db.String(255))
-    primaryContact = db.Column(db.String(255))
+    primaryContact = db.Column(db.String(255), nullable = False)
 
     def __init__(self, orgID, name, address1, address2, city, state, zipCode, 
                  country, phone1, phone2, email1, email2, primaryContact):
@@ -125,8 +125,8 @@ def createOrg():
     Return a 400 Bad Request code if there's a problem.
     We'll return a 201 Created code for a successful creation. 
     """
-    mandatory = ["name", "address1", "city", "state", "zipCode", "country", 
-                 "phone1", "email1", "primaryContact"]
+    # mandatory = ["name", "address1", "city", "state", "zipCode", "country", 
+    #              "phone1", "email1", "primaryContact"]
 
     #if not request.json or not all(mandatory) in request.json:
     if not request.json:
@@ -147,7 +147,7 @@ def createOrg():
 @app.route("/api/organizations/<int:id>", methods=["PUT"])
 def updateOrg(id):
     """
-    Update organization info
+    Update organization info. Return 202 Accepted code for success
     """
     org = organizations.query.get(id)
     incoming = request.get_json()
@@ -166,7 +166,7 @@ def updateOrg(id):
     org.primaryContact = incoming.get("primaryContact")
 
     db.session.commit()
-    return jsonify({"organization": org.toJSON()})
+    return jsonify({"organization": org.toJSON()}), 202
 
 
 @app.route("/api/organizations", methods=["GET"])
@@ -190,11 +190,12 @@ def getOrgByID(id):
 @app.route("/api/organizations/<int:id>", methods=["DELETE"])
 def deleteOrg(id):
     """
-    Delete organization
+    Delete organization. Return 202 Accepted code for success
     """
     db.session.delete(organizations.query.get(id))
     db.session.commit()
-    return jsonify({"result": True})
+    return jsonify({"result": True}), 202
+
 
 
 if __name__ == "__main__":
