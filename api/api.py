@@ -152,9 +152,14 @@ def createOrg():
 @app.route("/api/organizations/<int:id>", methods=["PUT"])
 def updateOrg(id):
     """
-    Update organization info. Return 200 OK code for success
+    Update organization info. Return 200 OK code for success, 204 No Content if
+    id is not found.
     """
     org = organizations.query.get(id)
+
+    if org is None:
+        return jsonify({"result": False}), 204
+        
     incoming = request.get_json()
 
     org.name = incoming.get("name")
