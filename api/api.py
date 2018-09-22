@@ -149,7 +149,24 @@ def updateOrg(id):
     """
     Update organization info
     """
-    return null
+    org = organizations.query.get(id)
+    incoming = request.get_json()
+
+    org.name = incoming.get("name")
+    org.address1 = incoming.get("address1")
+    org.address2 = incoming.get("address2")
+    org.city = incoming.get("city")
+    org.state = incoming.get("state")
+    org.zipCode = incoming.get("zipCode")
+    org.country = incoming.get("country")
+    org.phone1 = incoming.get("phone1")
+    org.phone2 = incoming.get("phone2")
+    org.email1 = incoming.get("email1")
+    org.email2 = incoming.get("email2")
+    org.primaryContact = incoming.get("primaryContact")
+
+    db.session.commit()
+    return jsonify({"organization": org})
 
 
 @app.route("/api/organizations", methods=["GET"])
@@ -166,8 +183,8 @@ def getOrgByID(id):
     """
     Select organization by id
     """
-    org = organizations.query.all(id).toJSON()
-    return jsonify({"organizations": org})
+    org = organizations.query.get(id).toJSON()
+    return jsonify({"organization": org})
 
 
 @app.route("/api/organizations/<int:id>/", methods=["DELETE"])
@@ -175,7 +192,9 @@ def deleteOrg(id):
     """
     Delete organization
     """
-    return null
+    db.session.delete(organizations.query.get(id))
+    db.session.commit()
+    return jsonify({"result": True})
 
 
 if __name__ == "__main__":
