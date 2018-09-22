@@ -133,11 +133,11 @@ def createOrg():
         abort(400)
 
     incoming = request.get_json()
-    mandatory = [incoming.get("name"), incoming.get("address1"), incoming.get("address2"),
+    mandatory = [incoming.get("name"), incoming.get("address1"),
                  incoming.get("city"), incoming.get("state"), incoming.get("zipCode"),
-                 incoming.get("country"), incoming.get("phone1"), incoming.get("phone2"),
-                 incoming.get("email1"), incoming.get("email2"), incoming.get("primaryContact")]
-    if None in any(mandatory):
+                 incoming.get("country"), incoming.get("phone1"),
+                 incoming.get("email1"), incoming.get("primaryContact")]
+    if None in mandatory:
         abort(400)
 
     org = organizations(None, incoming.get("name"), incoming.get("address1"), incoming.get("address2"),
