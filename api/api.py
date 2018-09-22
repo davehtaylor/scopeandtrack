@@ -190,7 +190,7 @@ def getOrgByID(id):
     """
     org = organizations.query.get(id).toJSON()
 
-    if org is None
+    if org is None:
         abort(204)
 
     return jsonify({"organization": org}), 200
