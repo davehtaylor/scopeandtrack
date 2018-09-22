@@ -192,7 +192,7 @@ def getOrgByID(id):
     org = organizations.query.get(id)
 
     if org is None:
-        return 204
+        return jsonify({"result": False}), 204
 
     return jsonify({"organization": org.toJSON()}), 200
 
@@ -206,7 +206,7 @@ def deleteOrg(id):
     org = organizations.query.get(id)
 
     if org is None:
-        return 204
+        return jsonify({"result": False}), 204
 
     db.session.delete(org)
     db.session.commit()
