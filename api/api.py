@@ -125,18 +125,17 @@ def createOrg():
     Return a 400 Bad Request code if there's a problem.
     We'll return a 201 Created code for a successful creation. 
     """
-    # mandatory = ["name", "address1", "city", "state", "zipCode", "country", 
-    #              "phone1", "email1", "primaryContact"]
-
-    #if not request.json or not all(mandatory) in request.json:
     if not request.json:
         abort(400)
 
     incoming = request.get_json()
+    
     mandatory = [incoming.get("name"), incoming.get("address1"),
-                 incoming.get("city"), incoming.get("state"), incoming.get("zipCode"),
-                 incoming.get("country"), incoming.get("phone1"),
-                 incoming.get("email1"), incoming.get("primaryContact")]
+                 incoming.get("city"), incoming.get("state"), 
+                 incoming.get("zipCode"), incoming.get("country"), 
+                 incoming.get("phone1"), incoming.get("email1"), 
+                 incoming.get("primaryContact")]
+    
     if None in mandatory:
         abort(400)
 
@@ -190,6 +189,10 @@ def getOrgByID(id):
     Select organization by id. Return 200 OK for success
     """
     org = organizations.query.get(id).toJSON()
+
+    if org is None
+        abort(204)
+
     return jsonify({"organization": org}), 200
 
 
