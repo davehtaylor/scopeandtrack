@@ -186,22 +186,29 @@ def getOrgs():
 @app.route("/api/organizations/<int:id>", methods=["GET"])
 def getOrgByID(id):
     """
-    Select organization by id. Return 200 OK for success
+    Select organization by id. Return 200 OK for success, 204 No Content if
+    id is not found.
     """
-    org = organizations.query.get(id).toJSON()
+    org = organizations.query.get(id)
 
     if org is None:
         abort(204)
 
-    return jsonify({"organization": org}), 200
+    return jsonify({"organization": org.toJSON()}), 200
 
 
 @app.route("/api/organizations/<int:id>", methods=["DELETE"])
 def deleteOrg(id):
     """
-    Delete organization. Return 200 OK code for success
+    Delete organization. Return 200 OK code for success, 204 No Content if
+    id is not found.
     """
-    db.session.delete(organizations.query.get(id))
+    org = organizations.query.get(id)
+
+    if org is None:
+        abort(204)
+
+    db.session.delete(org)
     db.session.commit()
     return jsonify({"result": True}), 200
 
