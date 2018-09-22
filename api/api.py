@@ -133,6 +133,12 @@ def createOrg():
         abort(400)
 
     incoming = request.get_json()
+    mandatory = [incoming.get("name"), incoming.get("address1"), incoming.get("address2"),
+                 incoming.get("city"), incoming.get("state"), incoming.get("zipCode"),
+                 incoming.get("country"), incoming.get("phone1"), incoming.get("phone2"),
+                 incoming.get("email1"), incoming.get("email2"), incoming.get("primaryContact")]
+    if None in any(mandatory):
+        abort(400)
 
     org = organizations(None, incoming.get("name"), incoming.get("address1"), incoming.get("address2"),
                         incoming.get("city"), incoming.get("state"), incoming.get("zipCode"),
@@ -147,7 +153,7 @@ def createOrg():
 @app.route("/api/organizations/<int:id>", methods=["PUT"])
 def updateOrg(id):
     """
-    Update organization info. Return 202 Accepted code for success
+    Update organization info. Return 200 OK code for success
     """
     org = organizations.query.get(id)
     incoming = request.get_json()
@@ -166,35 +172,35 @@ def updateOrg(id):
     org.primaryContact = incoming.get("primaryContact")
 
     db.session.commit()
-    return jsonify({"organization": org.toJSON()}), 202
+    return jsonify({"organization": org.toJSON()}), 200
 
 
 @app.route("/api/organizations", methods=["GET"])
 def getOrgs():
     """
-    List all organizations
+    List all organizations. Return 200 OK for success
     """
     orgs = [o.toJSON() for o in organizations.query.all()]
-    return jsonify({"organizations": orgs})
+    return jsonify({"organizations": orgs}), 200
 
 
 @app.route("/api/organizations/<int:id>", methods=["GET"])
 def getOrgByID(id):
     """
-    Select organization by id
+    Select organization by id. Return 200 OK for success
     """
     org = organizations.query.get(id).toJSON()
-    return jsonify({"organization": org})
+    return jsonify({"organization": org}), 200
 
 
 @app.route("/api/organizations/<int:id>", methods=["DELETE"])
 def deleteOrg(id):
     """
-    Delete organization. Return 202 Accepted code for success
+    Delete organization. Return 200 OK code for success
     """
     db.session.delete(organizations.query.get(id))
     db.session.commit()
-    return jsonify({"result": True}), 202
+    return jsonify({"result": True}), 200
 
 
 
