@@ -123,7 +123,7 @@ def createOrg():
     Create organizations. Ensure that we recieve a JSON request, and that it
     contains the mandatory fields. address2, phone2, and email2 are optional.
     Return a 400 Bad Request code if there's a problem.
-    We'll return a 201 Suceess code for a successful creation. 
+    We'll return a 201 Created code for a successful creation. 
     """
     mandatory = ["name", "address1", "city", "state", "zipCode", "country", 
                  "phone1", "email1", "primaryContact"]
@@ -144,7 +144,7 @@ def createOrg():
     return jsonify({"organization": org.toJSON()}), 201
 
 
-@app.route("/api/organizations/<int:id>/", methods=["PUT"])
+@app.route("/api/organizations/<int:id>", methods=["PUT"])
 def updateOrg(id):
     """
     Update organization info
@@ -178,7 +178,7 @@ def getOrgs():
     return jsonify({"organizations": orgs})
 
 
-@app.route("/api/organizations/<int:id>/", methods=["GET"])
+@app.route("/api/organizations/<int:id>", methods=["GET"])
 def getOrgByID(id):
     """
     Select organization by id
@@ -187,7 +187,7 @@ def getOrgByID(id):
     return jsonify({"organization": org})
 
 
-@app.route("/api/organizations/<int:id>/", methods=["DELETE"])
+@app.route("/api/organizations/<int:id>", methods=["DELETE"])
 def deleteOrg(id):
     """
     Delete organization
