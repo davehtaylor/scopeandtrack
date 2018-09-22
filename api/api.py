@@ -166,7 +166,7 @@ def updateOrg(id):
     org.primaryContact = incoming.get("primaryContact")
 
     db.session.commit()
-    return jsonify({"organization": org})
+    return jsonify({"organization": org.toJSON()})
 
 
 @app.route("/api/organizations", methods=["GET"])
