@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, abort
-from flask_restful import Api, Resource, reqparse
+#from flask_restful import Api, Resource, reqparse
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 
@@ -20,7 +20,17 @@ app = Flask(__name__)
 
 # Setup database connection
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://scopeandtrackAdmin:T@ylor8575@localhost/scopeandtrack"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+
+
+
+###############################
+#                             #
+#    Classes for DB tables    #
+#                             #
+###############################
+
 
 
 class organizations(db.Model):
@@ -117,6 +127,15 @@ class users(db.Model):
         }
 
 
+
+###############################
+#                             #
+#   organizations endpoints   #
+#                             #
+###############################
+
+
+
 @app.route("/api/organizations", methods=["POST"])
 def createOrg():
     """
@@ -170,7 +189,7 @@ def updateOrg(id):
     
     if None in mandatory:
         abort(400)
-    
+
     org.name = incoming.get("name")
     org.address1 = incoming.get("address1")
     org.address2 = incoming.get("address2")
@@ -225,6 +244,31 @@ def deleteOrg(id):
     db.session.delete(org)
     db.session.commit()
     return jsonify({"result": True}), 200
+
+
+
+###############################
+#                             #
+#       users endpoints       #
+#                             #
+###############################
+
+
+
+
+
+
+
+
+
+
+#####################################
+#                                   #
+#       dsdMachines endpoints       #
+#                                   #
+#####################################
+
+
 
 
 
