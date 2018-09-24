@@ -272,6 +272,18 @@ def deleteOrg(id):
 
 
 
+
+
+
+
+
+
+#####################################
+#                                   #
+#         main page endpoint        #
+#                                   #
+#####################################
+
 @app.route('/')
 def root():
     return app.send_static_file('index.html')
