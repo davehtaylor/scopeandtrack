@@ -21,6 +21,7 @@ app = Flask(__name__)
 # Setup database connection
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://scopeandtrackAdmin:T@ylor8575@localhost/scopeandtrack"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 db = SQLAlchemy(app)
 
 
@@ -269,6 +270,11 @@ def deleteOrg(id):
 #####################################
 
 
+
+
+@app.route('/')
+def root():
+    return app.send_static_file('index.html')
 
 
 
