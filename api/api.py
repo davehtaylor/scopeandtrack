@@ -38,6 +38,7 @@ class organizations(db.Model):
     """
     address2, phone2, and email2 are optional
     """
+    __tablename__ = "organizations"
     orgID = db.Column(db.Integer, primary_key = True, unique = True)
     name = db.Column(db.String(255), unique = True, nullable = False)
     address1 = db.Column(db.String(255), nullable = False)
@@ -92,6 +93,7 @@ class organizations(db.Model):
 
 
 class users(db.Model):
+    __tablename__ = "users"
     userID = db.Column(db.Integer, primary_key = True, unique = True)
     firstName = db.Column(db.String(255))
     lastName = db.Column(db.String(255))
@@ -131,6 +133,7 @@ class users(db.Model):
 
 
 class dsdMachines(db.Model):
+    __tablename__ = "dsdMachines"
     machineID = db.Column(db.Integer, primary_key = True, unique = True)
     make = db.Column(db.String(255), nullable = False)
     model = db.Column(db.String(255), nullable = False)
@@ -374,7 +377,6 @@ def createDSDMachine(orgID):
 
     if None in mandatory:
         abort(400)
-
 
     machine = dsdMachines(None, incoming.get("make"), incoming.get("model"), 
                           incoming.get("serial"), incoming.get("nickname"), 
