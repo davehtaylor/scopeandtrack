@@ -379,13 +379,10 @@ def createDSDMachine(orgID):
     if None in mandatory:
         abort(400)
 
+    # Make our date string something the query can understand. We have to send
+    # a datetime.date object
     dateLast = incoming.get("dateLastMaintenance").split('-')
     dateNext = incoming.get("dateNextMaintenance").split('-')
-
-    # machine = dsdMachines(None, incoming.get("make"), incoming.get("model"), 
-    #                       incoming.get("serial"), incoming.get("nickname"), 
-    #                       incoming.get("dateLastMaintenance"), 
-    #                       incoming.get("dateNextMaintenance"), incoming.get("orgID"))
     
     machine = dsdMachines(None, incoming.get("make"), incoming.get("model"), 
                           incoming.get("serial"), incoming.get("nickname"),
@@ -408,7 +405,7 @@ def getDSDMachines():
     """
     machines = [m.toJSON() for m in dsdMachines.query.all()]
 
-    if machines is None:
+    if len(machines) is None:
         return jsonify({"result": False}), 204
 
     return jsonify({"dsdMachines": machines}), 200
