@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, abort
 #from flask_restful import Api, Resource, reqparse
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+import datetime
 
 
 # Functions for encryption and validation
@@ -165,8 +166,8 @@ class dsdMachines(db.Model):
             "model": self.model,
             "serial": self.serial,
             "nickname": self.nickname,
-            "dateLastMaintenance": self.dateLastMaintenance,
-            "dateNextMaintenance": self.dateNextMaintenance,
+            "dateLastMaintenance": datetime.date(self.dateLastMaintenance),
+            "dateNextMaintenance": datetime.date(self.dateNextMaintenance),
             "orgID": self.orgID
         }
 
