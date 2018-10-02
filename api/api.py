@@ -90,6 +90,7 @@ class organizations(db.Model):
         }
 
 
+
 class users(db.Model):
     userID = db.Column(db.Integer, primary_key = True, unique = True)
     firstName = db.Column(db.String(255))
@@ -124,6 +125,83 @@ class users(db.Model):
             "salt": self.salt,
             "password": self.password,
             "privLevel": self.privLevel,
+            "orgID": self.orgID
+        }
+
+
+
+class dsdMachines(db.Model):
+    machineID = db.Column(db.Integer, primary_key = True, unique = True)
+    make = db.Column(db.String(255))
+    model = db.Column(db.String(255))
+    serial = db.Column(db.String(255))
+    nickname = db.Column(db.String(255))
+    dateLastMaintenance = db.Column(db.Date)
+    dateNextMaintenance = db.Column(db.Date)
+    orgID = db.Column(db.Integer)
+
+    def __init__(self, machineID, make, model, serial, nickname,
+                 dateLastMaintenance, dateNextMaintenance, orgID)
+        self.machineID = machineID
+        self.make = make
+        self.model = model
+        self.serial = serial
+        self.nickname = nickname
+        self.dateLastMaintenance = dateLastMaintenance
+        self.dateNextMaintenance = dateNextMaintenance
+        self.orgID = orgID 
+
+    def toJSON(self):
+        """
+        Create a serializable representation of our data, so we can return
+        JSON from our DB queries
+        """
+        return {
+            "machineID": self.machineID,
+            "make": self.make,
+            "model": self.model,
+            "serial": self.serial,
+            "nickname": self.nickname,
+            "dateLastMaintenance": self.dateLastMaintenance,
+            "dateNextMaintenance": self.dateNextMaintenance,
+            "orgID": self.orgID
+        }
+
+
+
+class scopes(db.Model):
+    """
+    inService is an integer, but it's treated as a boolean. Returns 0 or 1.
+    """
+    scopeID = db.Column(db.Integer, primary_key = True, unique = True)
+    make = db.Column(db.String(255))
+    model = db.Column(db.String(255))
+    serial = db.Column(db.String(255))
+    nickname = db.Column(db.String(255))
+    inService = db.Column(db.Integer)
+    orgID = db.Column(db.Integer)
+
+    def __init__(self, scopeID, make, model, serial, nickname, inService, orgID)
+        self.scopeID = scopeID
+        self.make = make
+        self.model = model
+        self.serial = serial
+        self.nickname = nickname
+        self.inService = inService
+        self.orgID = orgID 
+
+    def toJSON(self):
+        """
+        Create a serializable representation of our data, so we can return
+        JSON from our DB queries
+        """
+        return {
+            "scopeID": self.scopeID,
+            "make": self.make,
+            "model": self.model,
+            "serial": self.serial,
+            "nickname": self.nickname,
+            "inService": self.inService,
             "orgID": self.orgID
         }
 
@@ -214,7 +292,7 @@ def getOrgs():
     List all organizations. Return 200 OK for success
     """
     orgs = [o.toJSON() for o in organizations.query.all()]
-    return jsonify({"organizations": orgs}), 200
+    return jsonify({"organizations": '[' orgs ']'}), 200
 
 
 @app.route("/api/organizations/<int:id>", methods=["GET"])
@@ -270,11 +348,52 @@ def deleteOrg(id):
 #####################################
 
 
+@app.route("/api/organizations/<int:id>/dsdmachines", methods=["POST"])
+def createDSDMachines(id):
+    """
+    Create a DSD machine for a given organization
+    """
+    return None
 
 
+@app.route("/api/dsdmachines", methods=["GET"])
+def getDSDMachines():
+    """
+    Get all DSD machines
+    """
+    return None
 
 
+@app.route("/api/organizations/<int:id>/dsdmachines", methods=["GET"])
+def getDSDMachinesByOrg(id):
+    """
+    Get all DSD machines for a given organization
+    """
+    return None
 
+
+@app.route("/api/dsdmachines/<int:id>", methods=["GET"])
+def getDSDMachinesByID(id):
+    """
+    Get DSD machine by machineID
+    """
+    return None
+
+
+@app.route("/api/organizations/<int:orgID>/dsdmachines/<int:machineID>", methods=["PUT"])
+def updateDSDMachineByOrg(orgID, machineID):
+    """
+    Update a DSD machine for a given organization
+    """
+    return None
+
+
+@app.route("/api/organizations/<int:orgID>/dsdmachines/<int:machineID>", methods=["DELETE"])
+def deleteDSDMachineByOrg(orgID, machineID):
+    """
+    Delete a DSD machine for a given organization
+    """
+    return None
 
 
 
