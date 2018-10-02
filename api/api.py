@@ -139,7 +139,7 @@ class dsdMachines(db.Model):
     make = db.Column(db.String(255), nullable = False)
     model = db.Column(db.String(255), nullable = False)
     serial = db.Column(db.String(255), nullable = False)
-    nickname = db.Column(db.String(255))
+    nickname = db.Column(db.String(255), unique = True)
     dateLastMaintenance = db.Column(db.DateTime, nullable = False)
     dateNextMaintenance = db.Column(db.DateTime, nullable = False)
     orgID = db.Column(db.Integer, nullable = False)
