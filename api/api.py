@@ -389,8 +389,9 @@ def createDSDMachine(orgID):
     
     machine = dsdMachines(None, incoming.get("make"), incoming.get("model"), 
                           incoming.get("serial"), incoming.get("nickname"), 
-                          datetime.date(int(dateLast[0]), int(dateLast[1]), int(dateLast[2]) 
-                          datetime.date(int(dateNext[0]), int(dateNext[1]), int(dateNext[2]), incoming.get("orgID"))
+                          datetime.date(int(dateLast[0]), int(dateLast[1]), int(dateLast[2])) 
+                          datetime.date(int(dateNext[0]), int(dateNext[1]), int(dateNext[2])), 
+                          incoming.get("orgID"))
 
     db.session.add(machine)
     db.session.commit()
