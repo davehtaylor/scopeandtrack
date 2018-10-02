@@ -132,13 +132,13 @@ class users(db.Model):
 
 class dsdMachines(db.Model):
     machineID = db.Column(db.Integer, primary_key = True, unique = True)
-    make = db.Column(db.String(255))
-    model = db.Column(db.String(255))
-    serial = db.Column(db.String(255))
+    make = db.Column(db.String(255), nullable = False)
+    model = db.Column(db.String(255), nullable = False)
+    serial = db.Column(db.String(255), nullable = False)
     nickname = db.Column(db.String(255))
-    dateLastMaintenance = db.Column(db.Date)
-    dateNextMaintenance = db.Column(db.Date)
-    orgID = db.Column(db.Integer)
+    dateLastMaintenance = db.Column(db.Date, nullable = False)
+    dateNextMaintenance = db.Column(db.Date, nullable = False)
+    orgID = db.Column(db.Integer, nullable = False)
 
     def __init__(self, machineID, make, model, serial, nickname,
                  dateLastMaintenance, dateNextMaintenance, orgID):
@@ -174,12 +174,12 @@ class scopes(db.Model):
     inService is an integer, but it's treated as a boolean. Returns 0 or 1.
     """
     scopeID = db.Column(db.Integer, primary_key = True, unique = True)
-    make = db.Column(db.String(255))
-    model = db.Column(db.String(255))
-    serial = db.Column(db.String(255))
+    make = db.Column(db.String(255), nullable = False)
+    model = db.Column(db.String(255), nullable = False)
+    serial = db.Column(db.String(255), nullable = False)
     nickname = db.Column(db.String(255))
-    inService = db.Column(db.Integer)
-    orgID = db.Column(db.Integer)
+    inService = db.Column(db.Integer, nullable = False)
+    orgID = db.Column(db.Integer, nullable = False)
 
     def __init__(self, scopeID, make, model, serial, nickname, inService, orgID):
         self.scopeID = scopeID
@@ -244,6 +244,7 @@ def createOrg():
 
     db.session.add(org)
     db.session.commit()
+    
     return jsonify({"organization": org.toJSON()}), 201
 
 
@@ -289,9 +290,14 @@ def updateOrg(id):
 @app.route("/api/organizations", methods=["GET"])
 def getOrgs():
     """
-    List all organizations. Return 200 OK for success
+    List all organizations. Return 200 OK for success, 204 No Content if
+    no orgs are found.
     """
     orgs = [o.toJSON() for o in organizations.query.all()]
+
+    if orgs is None:
+        return jsonify({"result": False}), 204
+
     return jsonify({"organizations": orgs}), 200
 
 
@@ -348,36 +354,79 @@ def deleteOrg(id):
 #####################################
 
 
-@app.route("/api/organizations/<int:id>/dsdmachines", methods=["POST"])
-def createDSDMachines(id):
+@app.route("/api/organizations/<int:orgID>/dsdmachines", methods=["POST"])
+def createDSDMachine(orgID):
     """
-    Create a DSD machine for a given organization
+    Create a DSD machine for a given organization. Ensure that we recieve a 
+    JSON request, and that it contains the mandatory fields. Only nickname
+    is otpional.
+    Return a 400 Bad Request code if there's a problem.
+    We'll return a 201 Created code for a successful creation.
     """
-    return None
+    if not request.json:
+        abort(400)
+
+    incoming = request.get_json()
+
+    mandatory = [incoming.get("make"), incoming.get("model"), incoming.get("serial"), 
+                 incoming.get("dateLastMaintenance"), incoming.get("dateNextMaintenance"), 
+                 incoming.get("orgID")]
+
+    if None in mandatory:
+        abort(400)
+
+
+    machine = dsdMachines(None, incoming.get("make"), incoming.get("model"), 
+                          incoming.get("serial"), incoming.get("nickname"), 
+                          incoming.get("dateLastMaintenance"), 
+                          incoming.get("dateNextMaintenance"), incoming.get("orgID"))
+    
+    db.session.add(org)
+    db.session.commit()
+
+    return jsonify({"dsdMachine": machine.toJSON()}), 201
+    
 
 
 @app.route("/api/dsdmachines", methods=["GET"])
 def getDSDMachines():
     """
-    Get all DSD machines
+    Get all DSD machines. Return 200 OK for success, 204 No Content if
+    no machines are found. 
     """
-    return None
+    machines = [m.toJSON() for m in dsdMachines.query.all()]
+
+    if machines is None:
+        return jsonify({"result": False}), 204
+
+    return jsonify({"dsdMachines": orgs}), 200
 
 
-@app.route("/api/organizations/<int:id>/dsdmachines", methods=["GET"])
-def getDSDMachinesByOrg(id):
+@app.route("/api/organizations/<int:ordID>/dsdmachines", methods=["GET"])
+def getDSDMachinesByOrg(orgID):
     """
     Get all DSD machines for a given organization
     """
-    return None
+
+    machines = [m.toJSON() for m in dsdMachines.query.filter(dsdMachines.orgID == orgID)]
+
+    if machines is None:
+        return jsonify({"result": False}), 204
+
+    return jsonify({"dsdMachines": orgs}), 200
 
 
-@app.route("/api/dsdmachines/<int:id>", methods=["GET"])
-def getDSDMachinesByID(id):
+@app.route("/api/dsdmachines/<int:orgID>", methods=["GET"])
+def getDSDMachinesByID(orgID):
     """
     Get DSD machine by machineID
     """
-    return None
+    machine = dsdMachines.query.get(orgID)
+
+    if machine is None:
+        return jsonify({"result": False}), 204
+
+    return jsonify({"dsdMachine": machine.toJSON()}), 200
 
 
 @app.route("/api/organizations/<int:orgID>/dsdmachines/<int:machineID>", methods=["PUT"])
@@ -394,6 +443,7 @@ def deleteDSDMachineByOrg(orgID, machineID):
     Delete a DSD machine for a given organization
     """
     return None
+
 
 
 
