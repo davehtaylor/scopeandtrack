@@ -405,7 +405,7 @@ def getDSDMachines():
     """
     machines = [m.toJSON() for m in dsdMachines.query.all()]
 
-    if len(machines) is None:
+    if machines.first() is None:
         return jsonify({"result": False}), 204
 
     return jsonify({"dsdMachines": machines}), 200
