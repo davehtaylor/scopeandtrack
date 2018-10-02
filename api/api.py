@@ -139,8 +139,8 @@ class dsdMachines(db.Model):
     model = db.Column(db.String(255), nullable = False)
     serial = db.Column(db.String(255), nullable = False)
     nickname = db.Column(db.String(255))
-    dateLastMaintenance = db.Column(db.Date, nullable = False)
-    dateNextMaintenance = db.Column(db.Date, nullable = False)
+    dateLastMaintenance = db.Column(db.DateTime, nullable = False)
+    dateNextMaintenance = db.Column(db.DateTime, nullable = False)
     orgID = db.Column(db.Integer, nullable = False)
 
     def __init__(self, machineID, make, model, serial, nickname,
