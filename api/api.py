@@ -299,7 +299,7 @@ def getOrgs():
     """
     orgs = [o.toJSON() for o in organizations.query.all()]
 
-    if orgs is None:
+    if len(orgs) == 0:
         return jsonify({"result": False}), 204
 
     return jsonify({"organizations": orgs}), 200
@@ -419,14 +419,14 @@ def getDSDMachinesByOrg(orgID):
 
     machines = [m.toJSON() for m in dsdMachines.query.filter(dsdMachines.orgID == orgID)]
 
-    if machines is None:
+    if len(machines) == 0:
         return jsonify({"result": False}), 204
 
     return jsonify({"dsdMachines": machines}), 200
 
 
 @app.route("/api/dsdmachines/<int:orgID>", methods=["GET"])
-def getDSDMachinesByID(orgID):
+def getDSDMachineByID(orgID):
     """
     Get DSD machine by machineID
     """
