@@ -288,6 +288,7 @@ def updateOrg(id):
     org.primaryContact = incoming.get("primaryContact")
 
     db.session.commit()
+
     return jsonify({"organization": org.toJSON()}), 200
 
 
@@ -332,6 +333,7 @@ def deleteOrg(id):
 
     db.session.delete(org)
     db.session.commit()
+
     return jsonify({"result": True}), 200
 
 
@@ -424,12 +426,12 @@ def getDSDMachinesByOrg(orgID):
     return jsonify({"dsdMachines": machines}), 200
 
 
-@app.route("/api/dsdmachines/<int:orgID>", methods=["GET"])
+@app.route("/api/dsdmachines/<int:machineID>", methods=["GET"])
 def getDSDMachineByID(orgID):
     """
     Get DSD machine by machineID
     """
-    machine = dsdMachines.query.get(orgID)
+    machine = dsdMachines.query.get(machineID)
 
     if machine is None:
         return jsonify({"result": False}), 204
@@ -437,20 +439,53 @@ def getDSDMachineByID(orgID):
     return jsonify({"dsdMachine": machine.toJSON()}), 200
 
 
-@app.route("/api/organizations/<int:orgID>/dsdmachines/<int:machineID>", methods=["PUT"])
-def updateDSDMachineByOrg(orgID, machineID):
+@app.route("/api/dsdmachines/<int:machineID>", methods=["PUT"])
+def updateDSDMachine(machineID):
     """
-    Update a DSD machine for a given organization
+    Update a DSD machine. Return 200 OK code for success, 204 No Content if
+    id is not found.
     """
-    return None
+    machine = dsdMachines.query.get(machineID)
+
+    if machine is None:
+        return jsonify({"result": False}), 204
+
+    incoming = request.get_json()
+
+    mandatory = [incoming.get("make"), incoming.get("model"), incoming.get("serial"), 
+                 incoming.get("dateLastMaintenance"), incoming.get("dateNextMaintenance")]
+
+    if None in mandatory:
+        abort(400)
+
+    machine.name = incoming.get("make")
+    machine.model = incoming.get("model")
+    machine.serial = incoming.get("serial")
+    machine.nickname = incoming.get("nickname")
+    machine.dateLastMaintenance = incoming.get("dateLastMaintenance")
+    machine.dateNextMaintenance = incoming.get("dateNextMaintenance")
+
+    db.session.commit()
+
+    return jsonify({"machine": machine.toJSON()}), 200
 
 
-@app.route("/api/organizations/<int:orgID>/dsdmachines/<int:machineID>", methods=["DELETE"])
-def deleteDSDMachineByOrg(orgID, machineID):
+@app.route("/api/dsdmachines/<int:machineID>", methods=["DELETE"])
+def deleteDSDMachine(machineID):
     """
-    Delete a DSD machine for a given organization
+    Delete a DSD machine. Return 200 OK code for success, 204 No Content if
+    id is not found.
     """
-    return None
+
+    machine = dsdMachines.query.get(machineID)
+
+    if machine is None:
+        return jsonify({"result": False}), 204
+
+    db.session.delete(machine)
+    db.session.commit()
+
+    return jsonify({"result": True}), 200
 
 
 
