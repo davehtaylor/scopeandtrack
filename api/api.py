@@ -425,7 +425,7 @@ def getDSDMachinesByOrg(orgID):
     if machines is None:
         return jsonify({"result": False}), 204
 
-    return jsonify({"dsdMachines": orgs}), 200
+    return jsonify({"dsdMachines": machines}), 200
 
 
 @app.route("/api/dsdmachines/<int:orgID>", methods=["GET"])
