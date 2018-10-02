@@ -151,8 +151,8 @@ class dsdMachines(db.Model):
         self.model = model
         self.serial = serial
         self.nickname = nickname
-        self.dateLastMaintenance = datetime.date(dateLastMaintenance)
-        self.dateNextMaintenance = datetime.date(dateNextMaintenance)
+        self.dateLastMaintenance = dateLastMaintenance
+        self.dateNextMaintenance = dateNextMaintenance
         self.orgID = orgID 
 
     def toJSON(self):
@@ -379,11 +379,19 @@ def createDSDMachine(orgID):
     if None in mandatory:
         abort(400)
 
+    dateLast = incoming.get(dateLastMaintenance.split('-'))
+    dateNext = incoming.get(dateNextMaintenance.split('-'))
+
+    # machine = dsdMachines(None, incoming.get("make"), incoming.get("model"), 
+    #                       incoming.get("serial"), incoming.get("nickname"), 
+    #                       incoming.get("dateLastMaintenance"), 
+    #                       incoming.get("dateNextMaintenance"), incoming.get("orgID"))
+    
     machine = dsdMachines(None, incoming.get("make"), incoming.get("model"), 
                           incoming.get("serial"), incoming.get("nickname"), 
-                          incoming.get("dateLastMaintenance"), 
-                          incoming.get("dateNextMaintenance"), incoming.get("orgID"))
-    
+                          datetime.date(int(dateLast[0]), int(dateLast[1]), int(dateLast[2]) 
+                          datetime.date(int(dateNext[0]), int(dateNext[1]), int(dateNext[2]), incoming.get("orgID"))
+
     db.session.add(machine)
     db.session.commit()
 
