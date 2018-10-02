@@ -166,8 +166,8 @@ class dsdMachines(db.Model):
             "model": self.model,
             "serial": self.serial,
             "nickname": self.nickname,
-            "dateLastMaintenance": self.dateLastMaintenance,
-            "dateNextMaintenance": self.dateNextMaintenance,
+            "dateLastMaintenance": str(self.dateLastMaintenance),
+            "dateNextMaintenance": str(self.dateNextMaintenance),
             "orgID": self.orgID
         }
 
