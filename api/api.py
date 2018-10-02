@@ -151,8 +151,8 @@ class dsdMachines(db.Model):
         self.model = model
         self.serial = serial
         self.nickname = nickname
-        self.dateLastMaintenance = dateLastMaintenance
-        self.dateNextMaintenance = dateNextMaintenance
+        self.dateLastMaintenance = datetime.date(dateLastMaintenance)
+        self.dateNextMaintenance = datetime.date(dateNextMaintenance)
         self.orgID = orgID 
 
     def toJSON(self):
@@ -166,8 +166,8 @@ class dsdMachines(db.Model):
             "model": self.model,
             "serial": self.serial,
             "nickname": self.nickname,
-            "dateLastMaintenance": datetime.date(self.dateLastMaintenance),
-            "dateNextMaintenance": datetime.date(self.dateNextMaintenance),
+            "dateLastMaintenance": self.dateLastMaintenance,
+            "dateNextMaintenance": self.dateNextMaintenance,
             "orgID": self.orgID
         }
 
