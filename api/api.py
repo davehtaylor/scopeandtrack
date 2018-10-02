@@ -292,7 +292,7 @@ def getOrgs():
     List all organizations. Return 200 OK for success
     """
     orgs = [o.toJSON() for o in organizations.query.all()]
-    return jsonify({"organizations": '[' orgs ']'}), 200
+    return jsonify({"organizations": orgs}), 200
 
 
 @app.route("/api/organizations/<int:id>", methods=["GET"])
