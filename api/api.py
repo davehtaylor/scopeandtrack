@@ -244,7 +244,7 @@ def createOrg():
 
     db.session.add(org)
     db.session.commit()
-    
+
     return jsonify({"organization": org.toJSON()}), 201
 
 
@@ -381,7 +381,7 @@ def createDSDMachine(orgID):
                           incoming.get("dateLastMaintenance"), 
                           incoming.get("dateNextMaintenance"), incoming.get("orgID"))
     
-    db.session.add(org)
+    db.session.add(machine)
     db.session.commit()
 
     return jsonify({"dsdMachine": machine.toJSON()}), 201
