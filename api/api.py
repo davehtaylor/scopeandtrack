@@ -379,8 +379,8 @@ def createDSDMachine(orgID):
     if None in mandatory:
         abort(400)
 
-    dateLast = incoming.get(dateLastMaintenance).split('-')
-    dateNext = incoming.get(dateNextMaintenance).split('-')
+    dateLast = incoming.get("dateLastMaintenance").split('-')
+    dateNext = incoming.get("dateNextMaintenance").split('-')
 
     # machine = dsdMachines(None, incoming.get("make"), incoming.get("model"), 
     #                       incoming.get("serial"), incoming.get("nickname"), 
