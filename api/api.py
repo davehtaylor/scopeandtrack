@@ -414,7 +414,7 @@ def getDSDMachines():
     return jsonify({"dsdMachines": orgs}), 200
 
 
-@app.route("/api/organizations/<int:ordID>/dsdmachines", methods=["GET"])
+@app.route("/api/organizations/<int:orgID>/dsdmachines", methods=["GET"])
 def getDSDMachinesByOrg(orgID):
     """
     Get all DSD machines for a given organization
