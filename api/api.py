@@ -141,7 +141,7 @@ class dsdMachines(db.Model):
     orgID = db.Column(db.Integer)
 
     def __init__(self, machineID, make, model, serial, nickname,
-                 dateLastMaintenance, dateNextMaintenance, orgID)
+                 dateLastMaintenance, dateNextMaintenance, orgID):
         self.machineID = machineID
         self.make = make
         self.model = model
@@ -181,7 +181,7 @@ class scopes(db.Model):
     inService = db.Column(db.Integer)
     orgID = db.Column(db.Integer)
 
-    def __init__(self, scopeID, make, model, serial, nickname, inService, orgID)
+    def __init__(self, scopeID, make, model, serial, nickname, inService, orgID):
         self.scopeID = scopeID
         self.make = make
         self.model = model
