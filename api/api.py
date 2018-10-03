@@ -379,7 +379,7 @@ def createScope(orgID):
         abort(400)
 
     scope = scopes(None, incoming.get("make"), incoming.get("model"), incoming.get("serial"),
-                   incoming.get("nickname"), incoming.get("inService") orgID)
+                   incoming.get("nickname"), incoming.get("inService"), orgID)
 
     db.session.add(scope)
     db.session.commit()
