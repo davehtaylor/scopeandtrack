@@ -373,7 +373,7 @@ def createScope(orgID):
     incoming = request.get_json()
 
     mandatory = [incoming.get("make"), incoming.get("model"), incoming.get("serial"),
-                 incoming.get("inService"), incoming.get("orgID")]
+                 incoming.get("inService")]
 
     if None in mandatory:
         abort(400)
