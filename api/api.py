@@ -254,6 +254,34 @@ def createOrg():
     return jsonify({"organization": org.toJSON()}), 201
 
 
+@app.route("/api/organizations", methods=["GET"])
+def getOrgs():
+    """
+    List all organizations. 
+    Return 200 OK for success, 204 No Content if no orgs are found.
+    """
+    orgs = [o.toJSON() for o in organizations.query.all()]
+
+    if len(orgs) == 0:
+        return jsonify({"result": False}), 204
+
+    return jsonify({"organizations": orgs}), 200
+
+
+@app.route("/api/organizations/<int:id>", methods=["GET"])
+def getOrgByID(id):
+    """
+    Select organization by id. 
+    Return 200 OK for success, 204 No Content if id is not found.
+    """
+    org = organizations.query.get(id)
+
+    if org is None:
+        return jsonify({"result": False}), 204
+
+    return jsonify({"organization": org.toJSON()}), 200
+
+
 @app.route("/api/organizations/<int:id>", methods=["PUT"])
 def updateOrg(id):
     """
@@ -290,34 +318,6 @@ def updateOrg(id):
     org.primaryContact = incoming.get("primaryContact")
 
     db.session.commit()
-
-    return jsonify({"organization": org.toJSON()}), 200
-
-
-@app.route("/api/organizations", methods=["GET"])
-def getOrgs():
-    """
-    List all organizations. 
-    Return 200 OK for success, 204 No Content if no orgs are found.
-    """
-    orgs = [o.toJSON() for o in organizations.query.all()]
-
-    if len(orgs) == 0:
-        return jsonify({"result": False}), 204
-
-    return jsonify({"organizations": orgs}), 200
-
-
-@app.route("/api/organizations/<int:id>", methods=["GET"])
-def getOrgByID(id):
-    """
-    Select organization by id. 
-    Return 200 OK for success, 204 No Content if id is not found.
-    """
-    org = organizations.query.get(id)
-
-    if org is None:
-        return jsonify({"result": False}), 204
 
     return jsonify({"organization": org.toJSON()}), 200
 
@@ -363,11 +363,28 @@ def createScope(orgID):
     """
     Create a scope for a given organization. 
     Ensure that we recieve a JSON request, and that it contains the mandatory
-    fields. Only nickname is otpional.
+    fields. nickname and orgID are otpional.
     Return 400 Bad Request code if there's a problem.
     Return 201 Created for a successful creation.
     """
-    return None
+    if not request.json:
+        abort(400)
+
+    incoming = request.get_json()
+
+    mandatory = [incoming.get("make"), incoming.get("model"), incoming.get("serial"),
+                 incoming.get("inService"), incoming.get("orgID")]
+
+    if None in mandatory:
+        abort(400)
+
+    scope = scopes(None, incoming.get("make"), incoming.get("model"), incoming.get("serial"),
+                   incoming.get("nickname"), incoming.get("inService") orgID)
+
+    db.session.add(scope)
+    db.session.commit()
+
+    return jsonify({"scope": scope.toJSON()}), 201
 
 
 @app.route("/api/scopes", methods=["GET"])
@@ -451,7 +468,7 @@ def createDSDMachine(orgID):
     """
     Create a DSD machine for a given organization. 
     Ensure that we recieve a JSON request, and that it contains the mandatory
-    fields. Only nickname is otpional.
+    fields. nickname and orgID are optional.
     Return 400 Bad Request if mandatory fields are not present.
     Return 201 Created for a successful creation.
     """
