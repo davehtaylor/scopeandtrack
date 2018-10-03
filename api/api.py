@@ -37,7 +37,7 @@ db = SQLAlchemy(app)
 
 class organizations(db.Model):
     """
-    address2, phone2, and email2 are optional
+    address2, phone2, and email2 are optional.
     """
     __tablename__ = "organizations"
     orgID = db.Column(db.Integer, primary_key = True, unique = True)
@@ -73,7 +73,7 @@ class organizations(db.Model):
     def toJSON(self):
         """
         Create a serializable representation of our data, so we can return
-        JSON from our DB queries
+        JSON from our DB queries.
         """
         return {
             "orgID": self.orgID,
@@ -118,7 +118,7 @@ class users(db.Model):
     def toJSON(self):
         """
         Create a serializable representation of our data, so we can return
-        JSON from our DB queries
+        JSON from our DB queries.
         """
         return {
             "userID": self.userID,
@@ -158,7 +158,7 @@ class dsdMachines(db.Model):
     def toJSON(self):
         """
         Create a serializable representation of our data, so we can return
-        JSON from our DB queries
+        JSON from our DB queries.
         """
         return {
             "machineID": self.machineID,
@@ -177,6 +177,7 @@ class scopes(db.Model):
     """
     inService is an integer, but it's treated as a boolean. Returns 0 or 1.
     """
+    __tablename__ = "scopes"
     scopeID = db.Column(db.Integer, primary_key = True, unique = True)
     make = db.Column(db.String(255), nullable = False)
     model = db.Column(db.String(255), nullable = False)
@@ -222,10 +223,11 @@ class scopes(db.Model):
 @app.route("/api/organizations", methods=["POST"])
 def createOrg():
     """
-    Create organizations. Ensure that we recieve a JSON request, and that it
-    contains the mandatory fields. address2, phone2, and email2 are optional.
-    Return a 400 Bad Request code if there's a problem.
-    We'll return a 201 Created code for a successful creation. 
+    Create organizations. 
+    Ensure that we recieve a JSON request, and that it contains the mandatory 
+    fields. All fields except address2, phone2, and email2 are mandatory.
+    Return 400 Bad Request code if there's a problem.
+    Return 201 Created for a successful creation.
     """
     if not request.json:
         abort(400)
@@ -255,8 +257,8 @@ def createOrg():
 @app.route("/api/organizations/<int:id>", methods=["PUT"])
 def updateOrg(id):
     """
-    Update organization info. Return 200 OK code for success, 204 No Content if
-    id is not found.
+    Update organization info.
+    Return 200 OK code for success, 204 No Content if id is not found.
     """
     org = organizations.query.get(id)
 
@@ -295,8 +297,8 @@ def updateOrg(id):
 @app.route("/api/organizations", methods=["GET"])
 def getOrgs():
     """
-    List all organizations. Return 200 OK for success, 204 No Content if
-    no orgs are found.
+    List all organizations. 
+    Return 200 OK for success, 204 No Content if no orgs are found.
     """
     orgs = [o.toJSON() for o in organizations.query.all()]
 
@@ -309,8 +311,8 @@ def getOrgs():
 @app.route("/api/organizations/<int:id>", methods=["GET"])
 def getOrgByID(id):
     """
-    Select organization by id. Return 200 OK for success, 204 No Content if
-    id is not found.
+    Select organization by id. 
+    Return 200 OK for success, 204 No Content if id is not found.
     """
     org = organizations.query.get(id)
 
@@ -323,8 +325,8 @@ def getOrgByID(id):
 @app.route("/api/organizations/<int:id>", methods=["DELETE"])
 def deleteOrg(id):
     """
-    Delete organization. Return 200 OK code for success, 204 No Content if
-    id is not found.
+    Delete organization. 
+    Return 200 OK code for success, 204 No Content if id is not found.
     """
     org = organizations.query.get(id)
 
@@ -349,8 +351,92 @@ def deleteOrg(id):
 
 
 
+###############################
+#                             #
+#       scopes endpoints      #
+#                             #
+###############################
 
 
+@app.route("/api/organizations/<int:orgID>/scopes", methods=["POST"])
+def createScope(orgID):
+    """
+    Create a scope for a given organization. 
+    Ensure that we recieve a JSON request, and that it contains the mandatory
+    fields. Only nickname is otpional.
+    Return 400 Bad Request code if there's a problem.
+    Return 201 Created for a successful creation.
+    """
+    return None
+
+
+@app.route("/api/scopes", methods=["GET"])
+def getScopes():
+    """
+    Get all scopes. 
+    Return 200 OK for success, 204 No Content if no machines are found. 
+    """
+    scopeList = [s.toJSON() for s in scopes.query.all()]
+
+    if len(scopeList) == 0:
+        return jsonify({"result": False}), 204
+
+    return jsonify({"scopes": scopeList}), 200
+
+
+@app.route("/api/organizations/<int:orgID>/scopes", methods=["GET"])
+def getScopesByOrg(orgID):
+    """
+    Get all scopes for a given organization. 
+    Return 200 OK for success, 204 No Content if no scopes are found. 
+    """
+    scopeList = [s.toJSON() for s in scopes.query.filter(scopes.orgID == orgID)]
+
+    if len(scopeList) == 0:
+        return jsonify({"result": False}), 204
+
+    return jsonify({"scopes": scopeList}), 200
+
+
+@app.route("/api/scopes/<int:scopeID>", methods=["GET"])
+def getScopeByID(scopeID):
+    """
+    Get scope by scopeID.
+    Return 200 OK for success, 204 No Content if no scopes are found.
+    """
+    scope = scopes.query.get(scopeID)
+
+    if scope is None:
+        return jsonify({"result": False}), 204
+
+    return jsonify({"scope": scope.toJSON()}), 200
+
+
+@app.route("/api/scopes/<int:scopeID>", methods=["PUT"])
+def updateScope(scopeID):
+    """
+    Update a scope. 
+    Return 200 OK code for success, 204 No Content if id is not found, 
+    400 Bad Request if mandatory fields are not present.
+    """
+    return None
+
+
+@app.route("/api/scopes/<int:scopeID>", methods=["DELETE"])
+def deleteScope(scopeID):
+    """
+    Delete a scope. 
+    Return 200 OK code for success, 204 No Content if id is not found.
+    """
+    scope = scopes.query.get(scopeID)
+
+    if scope is None:
+        return jsonify({"result": False}), 204
+
+    db.session.delete(scope)
+    db.session.commit()
+
+    return jsonify({"result": True}), 200
 
 
 #####################################
@@ -363,11 +449,11 @@ def deleteOrg(id):
 @app.route("/api/organizations/<int:orgID>/dsdmachines", methods=["POST"])
 def createDSDMachine(orgID):
     """
-    Create a DSD machine for a given organization. Ensure that we recieve a 
-    JSON request, and that it contains the mandatory fields. Only nickname
-    is otpional.
-    Return a 400 Bad Request code if there's a problem.
-    We'll return a 201 Created code for a successful creation.
+    Create a DSD machine for a given organization. 
+    Ensure that we recieve a JSON request, and that it contains the mandatory
+    fields. Only nickname is otpional.
+    Return 400 Bad Request if mandatory fields are not present.
+    Return 201 Created for a successful creation.
     """
     if not request.json:
         abort(400)
@@ -401,8 +487,8 @@ def createDSDMachine(orgID):
 @app.route("/api/dsdmachines", methods=["GET"])
 def getDSDMachines():
     """
-    Get all DSD machines. Return 200 OK for success, 204 No Content if
-    no machines are found. 
+    Get all DSD machines. 
+    Return 200 OK for success, 204 No Content if no machines are found. 
     """
     machines = [m.toJSON() for m in dsdMachines.query.all()]
 
@@ -415,9 +501,9 @@ def getDSDMachines():
 @app.route("/api/organizations/<int:orgID>/dsdmachines", methods=["GET"])
 def getDSDMachinesByOrg(orgID):
     """
-    Get all DSD machines for a given organization
+    Get all DSD machines for a given organization.
+    Return 200 OK for success, 204 No Content if no machines are found.
     """
-
     machines = [m.toJSON() for m in dsdMachines.query.filter(dsdMachines.orgID == orgID)]
 
     if len(machines) == 0:
@@ -427,9 +513,10 @@ def getDSDMachinesByOrg(orgID):
 
 
 @app.route("/api/dsdmachines/<int:machineID>", methods=["GET"])
-def getDSDMachineByID(orgID):
+def getDSDMachineByID(machineID):
     """
-    Get DSD machine by machineID
+    Get DSD machine by machineID.
+    Return 200 OK for success, 204 No Content if no machines are found.
     """
     machine = dsdMachines.query.get(machineID)
 
@@ -442,8 +529,9 @@ def getDSDMachineByID(orgID):
 @app.route("/api/dsdmachines/<int:machineID>", methods=["PUT"])
 def updateDSDMachine(machineID):
     """
-    Update a DSD machine. Return 200 OK code for success, 204 No Content if
-    id is not found.
+    Update a DSD machine. 
+    Return 200 OK code for success, 204 No Content if id is not found, 
+    400 Bad Request if mandatory fields are not present.
     """
     machine = dsdMachines.query.get(machineID)
 
@@ -473,10 +561,9 @@ def updateDSDMachine(machineID):
 @app.route("/api/dsdmachines/<int:machineID>", methods=["DELETE"])
 def deleteDSDMachine(machineID):
     """
-    Delete a DSD machine. Return 200 OK code for success, 204 No Content if
-    id is not found.
+    Delete a DSD machine. 
+    Return 200 OK code for success, 204 No Content if id is not found.
     """
-
     machine = dsdMachines.query.get(machineID)
 
     if machine is None:
