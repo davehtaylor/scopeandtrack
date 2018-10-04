@@ -438,7 +438,7 @@ def updateScope(scopeID):
     """
     scope = scopes.query.get(scopeID)
 
-    if machine is None:
+    if scope is None:
         return jsonify({"result": False}), 204
 
     incoming = request.get_json()
