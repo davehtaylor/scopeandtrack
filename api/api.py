@@ -436,7 +436,28 @@ def updateScope(scopeID):
     Return 200 OK code for success, 204 No Content if id is not found, 
     400 Bad Request if mandatory fields are not present.
     """
-    return None
+    scope = scopes.query.get(scopeID)
+
+    if machine is None:
+        return jsonify({"result": False}), 204
+
+    incoming = request.get_json()
+
+    mandatory = [incoming.get("make"), incoming.get("model"), incoming.get("serial"),
+                 incoming.get("inService")]
+
+    if None in mandatory:
+        abort(400)
+
+    scope.make = incoming.get("make")
+    scope.model = incoming.get("model")
+    scope.serial = incoming.get("serial")
+    scope.nickname = incoming.get("nickname")
+    scope.inService = incoming.get("inService")
+
+    db.session.commit()
+
+    return jsonify({"scope": scope.toJSON()}), 200
 
 
 @app.route("/api/scopes/<int:scopeID>", methods=["DELETE"])
@@ -456,11 +477,13 @@ def deleteScope(scopeID):
     return jsonify({"result": True}), 200
 
 
+
 #####################################
 #                                   #
 #       dsdMachines endpoints       #
 #                                   #
 #####################################
+
 
 
 @app.route("/api/organizations/<int:orgID>/dsdmachines", methods=["POST"])
