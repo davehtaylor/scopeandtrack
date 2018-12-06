@@ -246,7 +246,7 @@ def createOrg():
                  incoming.get("primaryContact")]
     
     if None in mandatory:
-        abort(400)
+        return jsonify({"Error": "Create request must contain 'name', 'address1', 'city', 'state', 'zipCode', 'country', 'phone1', 'email', 'primaryContact'"}), 400
 
     org = organizations(None, incoming.get("name"), incoming.get("address1"), incoming.get("address2"),
                         incoming.get("city"), incoming.get("state"), incoming.get("zipCode"),
