@@ -1,23 +1,11 @@
 from flask import Flask, request, jsonify, abort
-#from flask_restful import Api, Resource, reqparse
 from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
 import datetime
-
-
-# Functions for encryption and validation
-# password_hash = bcrypt.generate_password_hash(password).decode("utf-8")
-# bcrypt.check_password_hash(password_hash, user_input)
 
 
 # Create the app
 app = Flask(__name__)
 
-# Create the API
-#api = Api(app)
-
-# # Setup our Bcrypt encryption
-# bcrypt = Bcrypt(app)
 
 # Setup database connection
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://scopeandtrackAdmin:T@ylor8575@localhost/scopeandtrack"
@@ -27,11 +15,11 @@ db = SQLAlchemy(app)
 
 
 
-###############################
-#                             #
-#    Classes for DB tables    #
-#                             #
-###############################
+###############################################################################
+#                                                                             #
+#                            Classes for DB tables                            #
+#                                                                             #
+###############################################################################
 
 
 
@@ -94,15 +82,18 @@ class organizations(db.Model):
 
 
 class users(db.Model):
+    """
+    All fields are mandatory
+    """
     __tablename__ = "users"
     userID = db.Column(db.Integer, primary_key = True, unique = True)
-    firstName = db.Column(db.String(255))
-    lastName = db.Column(db.String(255))
-    username = db.Column(db.String(255))
-    salt = db.Column(db.String(255))
-    password = db.Column(db.String(255))
-    privLevel = db.Column(db.Integer)
-    orgID = db.Column(db.Integer)
+    firstName = db.Column(db.String(255), nullable = False)
+    lastName = db.Column(db.String(255), nullable = False)
+    username = db.Column(db.String(255), unique = True, nullable = False)
+    salt = db.Column(db.String(255), nullable = False)
+    password = db.Column(db.String(255), nullable = False)
+    privLevel = db.Column(db.Integer, nullable = False)
+    orgID = db.Column(db.Integer, nullable = False)
 
     def __init__(self, userID, firstName, lastName, username, salt, 
                  password, privLevel, orgID):
@@ -115,25 +106,38 @@ class users(db.Model):
         self.privLevel = privLevel
         self.orgID = orgID
 
-    def toJSON(self):
+    def basicInfoToJSON(self):
         """
         Create a serializable representation of our data, so we can return
-        JSON from our DB queries.
+        JSON from our DB queries. This will return the user's info without
+        password data.
         """
         return {
             "userID": self.userID,
             "firstName": self.firstName,
             "lastName": self.lastName,
             "username": self.username,
-            "salt": self.salt,
-            "password": self.password,
             "privLevel": self.privLevel,
             "orgID": self.orgID
+        }
+
+    def passwordToJSON(self):
+        """
+        Create a serializable representation of our data, so we can return
+        JSON from our DB queries. This will return the salt and hashed
+        password
+        """
+        return {
+            "salt": self.salt,
+            "password": self.password
         }
 
 
 
 class dsdMachines(db.Model):
+    """
+    nickname is optional
+    """
     __tablename__ = "dsdMachines"
     machineID = db.Column(db.Integer, primary_key = True, unique = True)
     make = db.Column(db.String(255), nullable = False)
@@ -176,6 +180,7 @@ class dsdMachines(db.Model):
 class scopes(db.Model):
     """
     inService is an integer, but it's treated as a boolean. Returns 0 or 1.
+    nickname is optional
     """
     __tablename__ = "scopes"
     scopeID = db.Column(db.Integer, primary_key = True, unique = True)
@@ -211,12 +216,11 @@ class scopes(db.Model):
         }
 
 
-
-###############################
-#                             #
-#   organizations endpoints   #
-#                             #
-###############################
+###############################################################################
+#                                                                             #
+#                           organizations endpoints                           #
+#                                                                             #
+###############################################################################
 
 
 
@@ -230,7 +234,8 @@ def createOrg():
     Return 201 Created for a successful creation.
     """
     if not request.json:
-        abort(400)
+        # abort(400)
+        return jsonify({"Error": "No JSON packet received"}), 400
 
     incoming = request.get_json()
     
@@ -340,22 +345,105 @@ def deleteOrg(id):
 
 
 
-###############################
-#                             #
-#       users endpoints       #
-#                             #
-###############################
+###############################################################################
+#                                                                             #
+#                               users endpoints                               #
+#                                                                             #
+###############################################################################
 
 
 
+@app.route("/api/organizations/<int:orgID>/users", methods=["POST"])
+def createUser(orgID):
+    """
+    Create a user for a given organization. 
+    Ensure that we recieve a JSON request, and that it contains the mandatory
+    fields. nickname and orgID are otpional.
+    Return 400 Bad Request code if there's a problem.
+    Return 201 Created for a successful creation.
+    """
+    if not request.json:
+        abort(400)
+
+    incoming = request.get_json()
+
+    mandatory = [incoming.get("firstName"), incoming.get("lastName"),
+                 incoming.get("username"), incoming.get("salt"), incoming.get("password"),
+                 incoming.get("privLevel")]
+
+    if None in mandatory:
+        abort(400)
+
+    user = users(None, incoming.get("firstName"), incoming.get("lastName"),
+                 incoming.get("username"), incoming.get("salt"), incoming.get("password"),
+                 incoming.get("privLevel"), orgID)
+
+    db.session.add(user)
+    db.session.commit()
+
+    return jsonify({"user": user.basicInfoToJSON()}), 201
+
+
+@app.route("/api/organizations/users", methods=["GET"])
+def getUsers():
+    """
+    Get all users. Return all info except password info. 
+    Return 200 OK for success, 204 No Content if no machines are found. 
+    """
+    userList = [u.basicInfoToJSON() for u in users.query.all()]
+
+    if len(userList) == 0:
+        return jsonify({"result": False}), 204
+
+    return None
+
+
+@app.route("/api/organizations/<int:orgID>/users", methods=["GET"])
+def getUsersByOrg(orgID):
+    """
+    Get all users for a given organization. Return all info except password info. 
+    Return 200 OK for success, 204 No Content if no machines are found. 
+    """
+    userList = [u.basicInfoToJSON() for u in users.query.filter(users.orgID == orgID)]
+
+    if len(userList) == 0:
+        return jsonify({"result": False}), 204
+
+    return None
+
+
+@app.route("/api/users/<int:userID>", methods=["GET"])
+def getUserByID(userID):
+    return None
+
+
+@app.route("/api/users/<username>/password", methods=["GET"])
+def getUserPasswordByUsername(username):
+    return None
+
+
+@app.route("/api/users/<username>/<password>", methods=["GET"])
+def verifyUserPasswordByUsername(username, password):
+    return None
+
+
+@app.route("/api/users/<int:userID>", methods=["PUT"])
+def updateUser(userID):
+    return None
+
+
+@app.route("/api/users/<int:userID>", methods=["DELETE"])
+def deleteUser(userID):
+    return None
 
 
 
-###############################
-#                             #
-#       scopes endpoints      #
-#                             #
-###############################
+###############################################################################
+#                                                                             #
+#                               scopes endpoints                              #
+#                                                                             #
+###############################################################################
+
 
 
 @app.route("/api/organizations/<int:orgID>/scopes", methods=["POST"])
@@ -478,11 +566,11 @@ def deleteScope(scopeID):
 
 
 
-#####################################
-#                                   #
-#       dsdMachines endpoints       #
-#                                   #
-#####################################
+###############################################################################
+#                                                                             #
+#                            dsdMachines endpoints                            #
+#                                                                             #
+###############################################################################
 
 
 
@@ -616,17 +704,17 @@ def deleteDSDMachine(machineID):
 
 
 
+###############################################################################
+#                                                                             #
+#                             Main page endpoints                             #
+#                                                                             #
+###############################################################################
 
-#####################################
-#                                   #
-#         main page endpoint        #
-#                                   #
-#####################################
+
 
 @app.route('/')
 def root():
     return app.send_static_file('index.html')
-
 
 
 if __name__ == "__main__":
