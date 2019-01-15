@@ -256,7 +256,7 @@ def orgs():
         return "", 400
 
 
-@app.route("/api/organizations/<int:id>", methods=["GET", "PUT", "DELETE"])
+@app.route("/api/organizations/<int:orgID>", methods=["GET", "PUT", "DELETE"])
 def orgsByID(orgID):
     """
     Get, update, or delete organization info by ID. 
@@ -302,7 +302,7 @@ def orgsByID(orgID):
     elif request.method == "DELETE":
         db.session.delete(org)
         db.session.commit()
-        return jsonify({"result": "Organization " + orgID + " deleted"}), 200
+        return jsonify({"result": "Organization " + str(orgID) + " deleted"}), 200
     
     else:
         return "", 400
@@ -323,8 +323,7 @@ def createUser(orgID):
     Create a user for a given organization. 
     Ensure that we recieve a JSON request, and that it contains the mandatory
     fields. nickname and orgID are otpional.
-    Return 400 Bad Request code if there's a problem.
-    Return 201 Created for a successful creation.
+    Return 201 Created for a successful creation, 400 Bad Request otherwise.
     """
     if not request.json:
         return jsonify({"error": "No properly formatted JSON request was recieved"}), 400
@@ -332,7 +331,7 @@ def createUser(orgID):
     incoming = request.get_json()
 
     mandatory = [incoming.get("firstName"), incoming.get("lastName"),
-                 incoming.get("username"), ncoming.get("password"),
+                 incoming.get("username"), incoming.get("password"),
                  incoming.get("privLevel")]
 
     if None in mandatory:
@@ -359,7 +358,7 @@ def getUsers():
     if len(userList) == 0:
         return jsonify({"result": "No users found"}), 200
 
-    return None
+    return jsonify({"users": userList}), 200
 
 
 @app.route("/api/organizations/<int:orgID>/users", methods=["GET"])
@@ -371,9 +370,9 @@ def getUsersByOrg(orgID):
     userList = [u.toJSON() for u in users.query.filter(users.orgID == orgID)]
 
     if len(userList) == 0:
-        return jsonify({"result": "No users for organization ID " + orgID + " found"}), 204
+        return jsonify({"result": "No users for organization ID " + str(orgID) + " found"}), 204
 
-    return None
+    return jsonify({"users": userList}), 200
 
 
 @app.route("/api/users/<int:userID>", methods=["GET", "PUT", "DELETE"])
@@ -385,7 +384,7 @@ def userByID(userID):
     user = users.query.get(userID)
 
     if user == None:
-        return jsonify({"result": "No user with ID " + userID + " found"})
+        return jsonify({"result": "No user with ID " + str(userID) + " found"})
 
     if request.method == "GET":
         return jsonify({"user": user.toJSON()}), 200
@@ -414,7 +413,7 @@ def userByID(userID):
         db.session.delete(userID)
         db.session.commit()
 
-        return jsonify({"result": "User " + userID + " deleted"}), 200
+        return jsonify({"result": "User " + str(userID) + " deleted"}), 200
 
     else:
         return "", 400
@@ -481,7 +480,7 @@ def getScopesByOrg(orgID):
     scopeList = [s.toJSON() for s in scopes.query.filter(scopes.orgID == orgID)]
 
     if len(scopeList) == 0:
-        return jsonify({"result": "No scopes for organization ID " + orgID + " found"}), 204
+        return jsonify({"result": "No scopes for organization ID " + str(orgID) + " found"}), 204
 
     return jsonify({"scopes": scopeList}), 200
 
@@ -495,7 +494,7 @@ def scopeByID(scopeID):
     scope = scopes.query.get(scopeID)
 
     if scope is None:
-        return jsonify({"result": "No scope with ID " + scopeID + " found"}), 200
+        return jsonify({"result": "No scope with ID " + str(scopeID) + " found"}), 200
 
     if request.method == "GET":
         return jsonify({"scope": scope.toJSON()}), 200
@@ -523,7 +522,7 @@ def scopeByID(scopeID):
         db.session.delete(scopeID)
         db.session.commit()
 
-        return jsonify({"result": "Scope " + scopeID + " deleted"}), 200
+        return jsonify({"result": "Scope " + str(scopeID) + " deleted"}), 200
 
     else: 
         return "", 400
@@ -617,7 +616,7 @@ def dsdMachineByID(machineID):
     machine = dsdMachines.query.get(machineID)
 
     if machine is None:
-        return jsonify({"result": "No machine with ID " + machineID + " found"}), 200
+        return jsonify({"result": "No machine with ID " + str(machineID) + " found"}), 200
 
     if request.method == "GET":
         return jsonify({"dsdMachine": machine.toJSON()}), 200
@@ -646,7 +645,7 @@ def dsdMachineByID(machineID):
         db.session.delete(machineID)
         db.session.commit()
 
-        return jsonify({"result": "DSD machine " + machineID + " deleted"}), 200
+        return jsonify({"result": "DSD machine " + str(machineID) + " deleted"}), 200
 
     else:
         return "", 400
