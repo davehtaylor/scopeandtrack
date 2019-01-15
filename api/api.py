@@ -398,7 +398,7 @@ def userByID(userID):
                      incoming.get("privLevel")]
 
         if None in mandatory:
-            return jsonify("error": "Missing required fields: firstName, lastName, username, password, or privLevel"), 400
+            return jsonify({"error": "Missing required fields: firstName, lastName, username, password, or privLevel"}), 400
 
         user.firstName = incoming.get("firstName")
         user.lastName = incoming.get("lastName")
