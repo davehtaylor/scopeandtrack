@@ -267,10 +267,10 @@ def orgsByID(orgID):
     if org is None:
         return jsonify({"result": "No organization found"}), 200
 
-    if request.method = "GET":
+    if request.method == "GET":
         return jsonify({"organization": org.toJSON()}), 200
     
-    elif request.method = "PUT":
+    elif request.method == "PUT":
         incoming = request.get_json()
 
         mandatory = [incoming.get("name"), incoming.get("address1"),
