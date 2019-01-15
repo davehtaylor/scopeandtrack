@@ -221,7 +221,7 @@ def orgs():
     """
     if request.method == "POST":
         if not request.json:
-            return jsonify("error": "No properly formatted JSON request was recieved"), 400
+            return jsonify({"error": "No properly formatted JSON request was recieved"}), 400
 
         incoming = request.get_json()
         
@@ -232,7 +232,7 @@ def orgs():
                      incoming.get("primaryContact")]
         
         if None in mandatory:
-            return jsonify("error": "Missing required fields: name, address1, city, state, zipCode, country, phone1, email, or primaryContact"), 400
+            return jsonify({"error": "Missing required fields: name, address1, city, state, zipCode, country, phone1, email, or primaryContact"}), 400
 
         org = organizations(None, incoming.get("name"), incoming.get("address1"), incoming.get("address2"),
                             incoming.get("city"), incoming.get("state"), incoming.get("zipCode"),
@@ -280,7 +280,7 @@ def orgsByID(orgID):
                      incoming.get("primaryContact")]
         
         if None in mandatory:
-            return jsonify("error": "Missing required fields: name, address1, city, state, zipCode, country, phone1, email, or primaryContact"), 400
+            return jsonify({"error": "Missing required fields: name, address1, city, state, zipCode, country, phone1, email, or primaryContact"}), 400
 
         org.name = incoming.get("name")
         org.address1 = incoming.get("address1")
@@ -302,10 +302,10 @@ def orgsByID(orgID):
     elif request.method == "DELETE":
         db.session.delete(org)
         db.session.commit()
-        return jsonify({"Result": "Organization deleted"}), 200
+        return jsonify({"result": "Organization " + orgID + " deleted"}), 200
     
     else:
-        return jsonify({"Error": "Allowed methods: GET, PUT, DELETE"}), 400
+        return "", 400
 
 
 
@@ -327,7 +327,7 @@ def createUser(orgID):
     Return 201 Created for a successful creation.
     """
     if not request.json:
-        return jsonify("error": "No properly formatted JSON request was recieved"), 400
+        return jsonify({"error": "No properly formatted JSON request was recieved"}), 400
 
     incoming = request.get_json()
 
@@ -336,7 +336,7 @@ def createUser(orgID):
                  incoming.get("privLevel")]
 
     if None in mandatory:
-        return jsonify("error": "Missing required fields: firstName, lastName, username, password, or privLevel"), 400
+        return jsonify({"error": "Missing required fields: firstName, lastName, username, password, or privLevel"}), 400
 
     user = users(None, incoming.get("firstName"), incoming.get("lastName"),
                  incoming.get("username"), incoming.get("password"),
@@ -385,10 +385,10 @@ def userByID(userID):
     user = users.query.get(userID)
 
     if user == None:
-        return jsonify("result": "No user with ID " + userID + " found")
+        return jsonify({"result": "No user with ID " + userID + " found"})
 
     if request.method == "GET":
-        return jsonify("user": user.toJSON()), 200
+        return jsonify({"user": user.toJSON()}), 200
 
     elif request.method == "PUT":
         incoming = request.get_json()
@@ -408,13 +408,13 @@ def userByID(userID):
 
         db.session.commit()
 
-        return jsonify("user": user.toJSON()), 200
+        return jsonify({"user": user.toJSON()}), 200
 
     elif request.method == "DELETE":
         db.session.delete(userID)
         db.session.commit()
 
-        return jsonify("result": "User " + userID + " deleted"), 200
+        return jsonify({"result": "User " + userID + " deleted"}), 200
 
     else:
         return "", 400
@@ -439,7 +439,7 @@ def createScope(orgID):
     Return 201 Created for a successful creation.
     """
     if not request.json:
-        return jsonify("error": "No properly formatted JSON request was recieved"), 400
+        return jsonify({"error": "No properly formatted JSON request was recieved"}), 400
 
     incoming = request.get_json()
 
@@ -507,7 +507,7 @@ def scopeByID(scopeID):
                      incoming.get("inService")]
 
         if None in mandatory:
-            return jsonify("error": "Missing required fields: make, model, serial, or inService"), 400
+            return jsonify({"error": "Missing required fields: make, model, serial, or inService"}), 400
 
         scope.make = incoming.get("make")
         scope.model = incoming.get("model")
@@ -548,7 +548,7 @@ def createDSDMachine(orgID):
     Return 201 Created for a successful creation.
     """
     if not request.json:
-        return jsonify("error": "No properly formatted JSON request was recieved"), 400
+        return jsonify({"error": "No properly formatted JSON request was recieved"}), 400
 
     incoming = request.get_json()
 
@@ -556,7 +556,7 @@ def createDSDMachine(orgID):
                  incoming.get("dateLastMaintenance"), incoming.get("dateNextMaintenance")]
 
     if None in mandatory:
-        return jsonify("error": "Missing required fields: make, model, serial, dateLastMaintenance, or dateNextMaintenance"), 400
+        return jsonify({"error": "Missing required fields: make, model, serial, dateLastMaintenance, or dateNextMaintenance"}), 400
 
     # Make our date string something the query can understand. We have to send
     # a datetime.date object
@@ -629,7 +629,7 @@ def dsdMachineByID(machineID):
                      incoming.get("dateLastMaintenance"), incoming.get("dateNextMaintenance")]
 
         if None in mandatory:
-            return jsonify("error": "Missing required fields: make, model, serial, dateLastMaintenance, or dateNextMaintenance"), 400
+            return jsonify({"error": "Missing required fields: make, model, serial, dateLastMaintenance, or dateNextMaintenance"}), 400
 
         machine.name = incoming.get("make")
         machine.model = incoming.get("model")
