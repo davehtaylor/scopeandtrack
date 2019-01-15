@@ -447,7 +447,7 @@ def createScope(orgID):
                  incoming.get("inService")]
 
     if None in mandatory:
-        return jsonify("error": "Missing required fields: make, model, serial, or inService"), 400
+        return jsonify({"error": "Missing required fields: make, model, serial, or inService"}), 400
 
     scope = scopes(None, incoming.get("make"), incoming.get("model"), incoming.get("serial"),
                    incoming.get("nickname"), incoming.get("inService"), orgID)
