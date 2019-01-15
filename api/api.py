@@ -90,23 +90,21 @@ class users(db.Model):
     firstName = db.Column(db.String(255), nullable = False)
     lastName = db.Column(db.String(255), nullable = False)
     username = db.Column(db.String(255), unique = True, nullable = False)
-    salt = db.Column(db.String(255), nullable = False)
     password = db.Column(db.String(255), nullable = False)
     privLevel = db.Column(db.Integer, nullable = False)
     orgID = db.Column(db.Integer, nullable = False)
 
-    def __init__(self, userID, firstName, lastName, username, salt, 
+    def __init__(self, userID, firstName, lastName, username, 
                  password, privLevel, orgID):
         self.userID = userID
         self.firstName = firstName
         self.lastName = lastName
         self.username = username
-        self.salt = salt
         self.password = password
         self.privLevel = privLevel
         self.orgID = orgID
 
-    def basicInfoToJSON(self):
+    def toJSON(self):
         """
         Create a serializable representation of our data, so we can return
         JSON from our DB queries. This will return the user's info without
@@ -120,18 +118,6 @@ class users(db.Model):
             "privLevel": self.privLevel,
             "orgID": self.orgID
         }
-
-    def passwordToJSON(self):
-        """
-        Create a serializable representation of our data, so we can return
-        JSON from our DB queries. This will return the salt and hashed
-        password
-        """
-        return {
-            "salt": self.salt,
-            "password": self.password
-        }
-
 
 
 class dsdMachines(db.Model):
@@ -224,124 +210,102 @@ class scopes(db.Model):
 
 
 
-@app.route("/api/organizations", methods=["POST"])
-def createOrg():
+@app.route("/api/organizations", methods=["POST", "GET"])
+def orgs():
     """
-    Create organizations. 
+    Create organizations, or list all organizations
     Ensure that we recieve a JSON request, and that it contains the mandatory 
     fields. All fields except address2, phone2, and email2 are mandatory.
-    Return 400 Bad Request code if there's a problem.
-    Return 201 Created for a successful creation.
+    Return 200 OK if orgs are found to list, 201 Created for a successful org 
+    creation, or 400 Bad Request otherwise.
     """
-    if not request.json:
-        # abort(400)
-        return jsonify({"Error": "No JSON packet received"}), 400
+    if request.method == "POST":
+        if not request.json:
+            return jsonify("error": "No properly formatted JSON request was recieved"), 400
 
-    incoming = request.get_json()
-    
-    mandatory = [incoming.get("name"), incoming.get("address1"),
-                 incoming.get("city"), incoming.get("state"), 
-                 incoming.get("zipCode"), incoming.get("country"), 
-                 incoming.get("phone1"), incoming.get("email1"), 
-                 incoming.get("primaryContact")]
-    
-    if None in mandatory:
-        return jsonify({"Error": "Create request must contain 'name', 'address1', 'city', 'state', 'zipCode', 'country', 'phone1', 'email', 'primaryContact'"}), 400
+        incoming = request.get_json()
+        
+        mandatory = [incoming.get("name"), incoming.get("address1"),
+                     incoming.get("city"), incoming.get("state"), 
+                     incoming.get("zipCode"), incoming.get("country"), 
+                     incoming.get("phone1"), incoming.get("email1"), 
+                     incoming.get("primaryContact")]
+        
+        if None in mandatory:
+            return jsonify("error": "Missing required fields: name, address1, city, state, zipCode, country, phone1, email, or primaryContact"), 400
 
-    org = organizations(None, incoming.get("name"), incoming.get("address1"), incoming.get("address2"),
-                        incoming.get("city"), incoming.get("state"), incoming.get("zipCode"),
-                        incoming.get("country"), incoming.get("phone1"), incoming.get("phone2"),
-                        incoming.get("email1"), incoming.get("email2"), incoming.get("primaryContact"))
+        org = organizations(None, incoming.get("name"), incoming.get("address1"), incoming.get("address2"),
+                            incoming.get("city"), incoming.get("state"), incoming.get("zipCode"),
+                            incoming.get("country"), incoming.get("phone1"), incoming.get("phone2"),
+                            incoming.get("email1"), incoming.get("email2"), incoming.get("primaryContact"))
 
-    db.session.add(org)
-    db.session.commit()
+        db.session.add(org)
+        db.session.commit()
 
-    return jsonify({"organization": org.toJSON()}), 201
+        return jsonify({"organization": org.toJSON()}), 201
+
+    elif request.method == "GET":
+        orgs = [o.toJSON() for o in organizations.query.all()]
+
+        if len(orgs) == 0:
+            return jsonify({"result": "No organizations found"}), 200
+
+        return jsonify({"organizations": orgs}), 200
+
+    else:
+        return "", 400
 
 
-@app.route("/api/organizations", methods=["GET"])
-def getOrgs():
+@app.route("/api/organizations/<int:id>", methods=["GET", "PUT", "DELETE"])
+def orgsByID(orgID):
     """
-    List all organizations. 
-    Return 200 OK for success, 204 No Content if no orgs are found.
+    Get, update, or delete organization info by ID. 
+    Return 200 OK for success, 400 Bad Request otherwise.
     """
-    orgs = [o.toJSON() for o in organizations.query.all()]
-
-    if len(orgs) == 0:
-        return jsonify({"result": False}), 204
-
-    return jsonify({"organizations": orgs}), 200
-
-
-@app.route("/api/organizations/<int:id>", methods=["GET"])
-def getOrgByID(id):
-    """
-    Select organization by id. 
-    Return 200 OK for success, 204 No Content if id is not found.
-    """
-    org = organizations.query.get(id)
+    org = organizations.query.get(orgID)
 
     if org is None:
-        return jsonify({"result": False}), 204
+        return jsonify({"result": "No organization found"}), 200
 
-    return jsonify({"organization": org.toJSON()}), 200
-
-
-@app.route("/api/organizations/<int:id>", methods=["PUT"])
-def updateOrg(id):
-    """
-    Update organization info.
-    Return 200 OK code for success, 204 No Content if id is not found.
-    """
-    org = organizations.query.get(id)
-
-    if org is None:
-        return jsonify({"result": False}), 204
-
-    incoming = request.get_json()
-
-    mandatory = [incoming.get("name"), incoming.get("address1"),
-                 incoming.get("city"), incoming.get("state"), 
-                 incoming.get("zipCode"), incoming.get("country"), 
-                 incoming.get("phone1"), incoming.get("email1"), 
-                 incoming.get("primaryContact")]
+    if request.method = "GET":
+        return jsonify({"organization": org.toJSON()}), 200
     
-    if None in mandatory:
-        abort(400)
+    elif request.method = "PUT":
+        incoming = request.get_json()
 
-    org.name = incoming.get("name")
-    org.address1 = incoming.get("address1")
-    org.address2 = incoming.get("address2")
-    org.city = incoming.get("city")
-    org.state = incoming.get("state")
-    org.zipCode = incoming.get("zipCode")
-    org.country = incoming.get("country")
-    org.phone1 = incoming.get("phone1")
-    org.phone2 = incoming.get("phone2")
-    org.email1 = incoming.get("email1")
-    org.email2 = incoming.get("email2")
-    org.primaryContact = incoming.get("primaryContact")
+        mandatory = [incoming.get("name"), incoming.get("address1"),
+                     incoming.get("city"), incoming.get("state"), 
+                     incoming.get("zipCode"), incoming.get("country"), 
+                     incoming.get("phone1"), incoming.get("email1"), 
+                     incoming.get("primaryContact")]
+        
+        if None in mandatory:
+            return jsonify("error": "Missing required fields: name, address1, city, state, zipCode, country, phone1, email, or primaryContact"), 400
 
-    db.session.commit()
+        org.name = incoming.get("name")
+        org.address1 = incoming.get("address1")
+        org.address2 = incoming.get("address2")
+        org.city = incoming.get("city")
+        org.state = incoming.get("state")
+        org.zipCode = incoming.get("zipCode")
+        org.country = incoming.get("country")
+        org.phone1 = incoming.get("phone1")
+        org.phone2 = incoming.get("phone2")
+        org.email1 = incoming.get("email1")
+        org.email2 = incoming.get("email2")
+        org.primaryContact = incoming.get("primaryContact")
 
-    return jsonify({"organization": org.toJSON()}), 200
+        db.session.commit()
 
-
-@app.route("/api/organizations/<int:id>", methods=["DELETE"])
-def deleteOrg(id):
-    """
-    Delete organization. 
-    Return 200 OK code for success, 204 No Content if id is not found.
-    """
-    org = organizations.query.get(id)
-
-    if org is None:
-        return jsonify({"result": False}), 204
-
-    db.session.delete(org)
-    db.session.commit()
-
-    return jsonify({"result": True}), 200
+        return jsonify({"organization": org.toJSON()}), 200
+    
+    elif request.method == "DELETE":
+        db.session.delete(org)
+        db.session.commit()
+        return jsonify({"Result": "Organization deleted"}), 200
+    
+    else:
+        return jsonify({"Error": "Allowed methods: GET, PUT, DELETE"}), 400
 
 
 
@@ -363,37 +327,37 @@ def createUser(orgID):
     Return 201 Created for a successful creation.
     """
     if not request.json:
-        abort(400)
+        return jsonify("error": "No properly formatted JSON request was recieved"), 400
 
     incoming = request.get_json()
 
     mandatory = [incoming.get("firstName"), incoming.get("lastName"),
-                 incoming.get("username"), incoming.get("salt"), incoming.get("password"),
+                 incoming.get("username"), ncoming.get("password"),
                  incoming.get("privLevel")]
 
     if None in mandatory:
-        abort(400)
+        return jsonify("error": "Missing required fields: firstName, lastName, username, password, or privLevel"), 400
 
     user = users(None, incoming.get("firstName"), incoming.get("lastName"),
-                 incoming.get("username"), incoming.get("salt"), incoming.get("password"),
+                 incoming.get("username"), incoming.get("password"),
                  incoming.get("privLevel"), orgID)
 
     db.session.add(user)
     db.session.commit()
 
-    return jsonify({"user": user.basicInfoToJSON()}), 201
+    return jsonify({"user": user.toJSON()}), 201
 
 
 @app.route("/api/organizations/users", methods=["GET"])
 def getUsers():
     """
     Get all users. Return all info except password info. 
-    Return 200 OK for success, 204 No Content if no machines are found. 
+    Return 200 OK for success, 204 No Content if no users are found. 
     """
-    userList = [u.basicInfoToJSON() for u in users.query.all()]
+    userList = [u.toJSON() for u in users.query.all()]
 
     if len(userList) == 0:
-        return jsonify({"result": False}), 204
+        return jsonify({"result": "No users found"}), 200
 
     return None
 
@@ -404,37 +368,56 @@ def getUsersByOrg(orgID):
     Get all users for a given organization. Return all info except password info. 
     Return 200 OK for success, 204 No Content if no machines are found. 
     """
-    userList = [u.basicInfoToJSON() for u in users.query.filter(users.orgID == orgID)]
+    userList = [u.toJSON() for u in users.query.filter(users.orgID == orgID)]
 
     if len(userList) == 0:
-        return jsonify({"result": False}), 204
+        return jsonify({"result": "No users for organization ID " + orgID + " found"}), 204
 
     return None
 
 
-@app.route("/api/users/<int:userID>", methods=["GET"])
-def getUserByID(userID):
-    return None
+@app.route("/api/users/<int:userID>", methods=["GET", "PUT", "DELETE"])
+def userByID(userID):
+    """
+    Get, update, or delete users by scopeID.
+    Return 200 OK for success 400 Bad Request otherwise.
+    """
+    user = users.query.get(userID)
 
+    if user == None:
+        return jsonify("result": "No user with ID " + userID + " found")
 
-@app.route("/api/users/<username>/password", methods=["GET"])
-def getUserPasswordByUsername(username):
-    return None
+    if request.method == "GET":
+        return jsonify("user": user.toJSON()), 200
 
+    elif request.method == "PUT":
+        incoming = request.get_json()
 
-@app.route("/api/users/<username>/<password>", methods=["GET"])
-def verifyUserPasswordByUsername(username, password):
-    return None
+        mandatory = [incoming.get("firstName"), incoming.get("lastName"),
+                     incoming.get("username"), ncoming.get("password"),
+                     incoming.get("privLevel")]
 
+        if None in mandatory:
+            return jsonify("error": "Missing required fields: firstName, lastName, username, password, or privLevel"), 400
 
-@app.route("/api/users/<int:userID>", methods=["PUT"])
-def updateUser(userID):
-    return None
+        user.firstName = incoming.get("firstName")
+        user.lastName = incoming.get("lastName")
+        user.username = incoming.get("username")
+        user.password = incoming.get("password")
+        user.privLevel = incoming.get("privLevel")
 
+        db.session.commit()
 
-@app.route("/api/users/<int:userID>", methods=["DELETE"])
-def deleteUser(userID):
-    return None
+        return jsonify("user": user.toJSON()), 200
+
+    elif request.method == "DELETE":
+        db.session.delete(userID)
+        db.session.commit()
+
+        return jsonify("result": "User " + userID + " deleted"), 200
+
+    else:
+        return "", 400
 
 
 
@@ -456,7 +439,7 @@ def createScope(orgID):
     Return 201 Created for a successful creation.
     """
     if not request.json:
-        abort(400)
+        return jsonify("error": "No properly formatted JSON request was recieved"), 400
 
     incoming = request.get_json()
 
@@ -464,7 +447,7 @@ def createScope(orgID):
                  incoming.get("inService")]
 
     if None in mandatory:
-        abort(400)
+        return jsonify("error": "Missing required fields: make, model, serial, or inService"), 400
 
     scope = scopes(None, incoming.get("make"), incoming.get("model"), incoming.get("serial"),
                    incoming.get("nickname"), incoming.get("inService"), orgID)
@@ -484,7 +467,7 @@ def getScopes():
     scopeList = [s.toJSON() for s in scopes.query.all()]
 
     if len(scopeList) == 0:
-        return jsonify({"result": False}), 204
+        return jsonify({"result": "No scopes found"}), 200
 
     return jsonify({"scopes": scopeList}), 200
 
@@ -498,71 +481,52 @@ def getScopesByOrg(orgID):
     scopeList = [s.toJSON() for s in scopes.query.filter(scopes.orgID == orgID)]
 
     if len(scopeList) == 0:
-        return jsonify({"result": False}), 204
+        return jsonify({"result": "No scopes for organization ID " + orgID + " found"}), 204
 
     return jsonify({"scopes": scopeList}), 200
 
 
-@app.route("/api/scopes/<int:scopeID>", methods=["GET"])
-def getScopeByID(scopeID):
+@app.route("/api/scopes/<int:scopeID>", methods=["GET", "PUT", "DELETE"])
+def scopeByID(scopeID):
     """
-    Get scope by scopeID.
-    Return 200 OK for success, 204 No Content if no scopes are found.
-    """
-    scope = scopes.query.get(scopeID)
-
-    if scope is None:
-        return jsonify({"result": False}), 204
-
-    return jsonify({"scope": scope.toJSON()}), 200
-
-
-@app.route("/api/scopes/<int:scopeID>", methods=["PUT"])
-def updateScope(scopeID):
-    """
-    Update a scope. 
-    Return 200 OK code for success, 204 No Content if id is not found, 
-    400 Bad Request if mandatory fields are not present.
+    Get, update, or delete scope by scopeID.
+    Return 200 OK for success 400 Bad Request otherwise.
     """
     scope = scopes.query.get(scopeID)
 
     if scope is None:
-        return jsonify({"result": False}), 204
+        return jsonify({"result": "No scope with ID " + scopeID + " found"}), 200
 
-    incoming = request.get_json()
+    if request.method == "GET":
+        return jsonify({"scope": scope.toJSON()}), 200
 
-    mandatory = [incoming.get("make"), incoming.get("model"), incoming.get("serial"),
-                 incoming.get("inService")]
+    elif request.method == "PUT":
+        incoming = request.get_json()
 
-    if None in mandatory:
-        abort(400)
+        mandatory = [incoming.get("make"), incoming.get("model"), incoming.get("serial"),
+                     incoming.get("inService")]
 
-    scope.make = incoming.get("make")
-    scope.model = incoming.get("model")
-    scope.serial = incoming.get("serial")
-    scope.nickname = incoming.get("nickname")
-    scope.inService = incoming.get("inService")
+        if None in mandatory:
+            return jsonify("error": "Missing required fields: make, model, serial, or inService"), 400
 
-    db.session.commit()
+        scope.make = incoming.get("make")
+        scope.model = incoming.get("model")
+        scope.serial = incoming.get("serial")
+        scope.nickname = incoming.get("nickname")
+        scope.inService = incoming.get("inService")
 
-    return jsonify({"scope": scope.toJSON()}), 200
+        db.session.commit()
 
+        return jsonify({"scope": scope.toJSON()}), 200
 
-@app.route("/api/scopes/<int:scopeID>", methods=["DELETE"])
-def deleteScope(scopeID):
-    """
-    Delete a scope. 
-    Return 200 OK code for success, 204 No Content if id is not found.
-    """
-    scope = scopes.query.get(scopeID)
+    elif request.method == "DELETE":
+        db.session.delete(scopeID)
+        db.session.commit()
 
-    if scope is None:
-        return jsonify({"result": False}), 204
+        return jsonify({"result": "Scope " + scopeID + " deleted"}), 200
 
-    db.session.delete(scope)
-    db.session.commit()
-
-    return jsonify({"result": True}), 200
+    else: 
+        return "", 400
 
 
 
@@ -584,7 +548,7 @@ def createDSDMachine(orgID):
     Return 201 Created for a successful creation.
     """
     if not request.json:
-        abort(400)
+        return jsonify("error": "No properly formatted JSON request was recieved"), 400
 
     incoming = request.get_json()
 
@@ -592,36 +556,40 @@ def createDSDMachine(orgID):
                  incoming.get("dateLastMaintenance"), incoming.get("dateNextMaintenance")]
 
     if None in mandatory:
-        abort(400)
+        return jsonify("error": "Missing required fields: make, model, serial, dateLastMaintenance, or dateNextMaintenance"), 400
 
     # Make our date string something the query can understand. We have to send
     # a datetime.date object
-    dateLast = incoming.get("dateLastMaintenance").split('-')
-    dateNext = incoming.get("dateNextMaintenance").split('-')
+    # dateLast = incoming.get("dateLastMaintenance").split('-')
+    # dateNext = incoming.get("dateNextMaintenance").split('-')
+    dateLast = datetime.strptime(incoming.get("dateLastMaintenance"), "%y-%m-%d")
+    dateNext = datetime.strptime(incoming.get("dateNextMaintenance"), "%y-%m-%d")
     
+    # machine = dsdMachines(None, incoming.get("make"), incoming.get("model"), 
+    #                       incoming.get("serial"), incoming.get("nickname"),
+    #                       datetime.date(int(dateLast[0]), int(dateLast[1]), int(dateLast[2])), 
+    #                       datetime.date(int(dateNext[0]), int(dateNext[1]), int(dateNext[2])), 
+    #                       orgID)
     machine = dsdMachines(None, incoming.get("make"), incoming.get("model"), 
                           incoming.get("serial"), incoming.get("nickname"),
-                          datetime.date(int(dateLast[0]), int(dateLast[1]), int(dateLast[2])), 
-                          datetime.date(int(dateNext[0]), int(dateNext[1]), int(dateNext[2])), 
-                          orgID)
+                          dateLast, dateNext, orgID)
 
     db.session.add(machine)
     db.session.commit()
 
     return jsonify({"dsdMachine": machine.toJSON()}), 201
-    
 
 
 @app.route("/api/dsdmachines", methods=["GET"])
 def getDSDMachines():
     """
     Get all DSD machines. 
-    Return 200 OK for success, 204 No Content if no machines are found. 
+    Return 200 OK for success. 
     """
     machines = [m.toJSON() for m in dsdMachines.query.all()]
 
     if len(machines) == 0:
-        return jsonify({"result": False}), 204
+        return jsonify({"result": "No DSD machines found"}), 200
 
     return jsonify({"dsdMachines": machines}), 200
 
@@ -630,77 +598,58 @@ def getDSDMachines():
 def getDSDMachinesByOrg(orgID):
     """
     Get all DSD machines for a given organization.
-    Return 200 OK for success, 204 No Content if no machines are found.
+    Return 200 OK for success.
     """
     machines = [m.toJSON() for m in dsdMachines.query.filter(dsdMachines.orgID == orgID)]
 
     if len(machines) == 0:
-        return jsonify({"result": False}), 204
+        return jsonify({"result": "No machines for organization ID " + orgID + " found"}), 200
 
     return jsonify({"dsdMachines": machines}), 200
 
 
-@app.route("/api/dsdmachines/<int:machineID>", methods=["GET"])
-def getDSDMachineByID(machineID):
+@app.route("/api/dsdmachines/<int:machineID>", methods=["GET", "PUT", "DELETE"])
+def dsdMachineByID(machineID):
     """
-    Get DSD machine by machineID.
-    Return 200 OK for success, 204 No Content if no machines are found.
-    """
-    machine = dsdMachines.query.get(machineID)
-
-    if machine is None:
-        return jsonify({"result": False}), 204
-
-    return jsonify({"dsdMachine": machine.toJSON()}), 200
-
-
-@app.route("/api/dsdmachines/<int:machineID>", methods=["PUT"])
-def updateDSDMachine(machineID):
-    """
-    Update a DSD machine. 
-    Return 200 OK code for success, 204 No Content if id is not found, 
-    400 Bad Request if mandatory fields are not present.
+    Get, update, or delete DSD machine by machineID.
+    Return 200 OK for success, 400 Bad Request otherwise
     """
     machine = dsdMachines.query.get(machineID)
 
     if machine is None:
-        return jsonify({"result": False}), 204
+        return jsonify({"result": "No machine with ID " + machineID + " found"}), 200
 
-    incoming = request.get_json()
+    if request.method == "GET":
+        return jsonify({"dsdMachine": machine.toJSON()}), 200
 
-    mandatory = [incoming.get("make"), incoming.get("model"), incoming.get("serial"), 
-                 incoming.get("dateLastMaintenance"), incoming.get("dateNextMaintenance")]
+    elif request.method == "PUT":
+        incoming = request.get_json()
 
-    if None in mandatory:
-        abort(400)
+        mandatory = [incoming.get("make"), incoming.get("model"), incoming.get("serial"), 
+                     incoming.get("dateLastMaintenance"), incoming.get("dateNextMaintenance")]
 
-    machine.name = incoming.get("make")
-    machine.model = incoming.get("model")
-    machine.serial = incoming.get("serial")
-    machine.nickname = incoming.get("nickname")
-    machine.dateLastMaintenance = incoming.get("dateLastMaintenance")
-    machine.dateNextMaintenance = incoming.get("dateNextMaintenance")
+        if None in mandatory:
+            return jsonify("error": "Missing required fields: make, model, serial, dateLastMaintenance, or dateNextMaintenance"), 400
 
-    db.session.commit()
+        machine.name = incoming.get("make")
+        machine.model = incoming.get("model")
+        machine.serial = incoming.get("serial")
+        machine.nickname = incoming.get("nickname")
+        machine.dateLastMaintenance = incoming.get("dateLastMaintenance")
+        machine.dateNextMaintenance = incoming.get("dateNextMaintenance")
 
-    return jsonify({"machine": machine.toJSON()}), 200
+        db.session.commit()
 
+        return jsonify({"machine": machine.toJSON()}), 200
 
-@app.route("/api/dsdmachines/<int:machineID>", methods=["DELETE"])
-def deleteDSDMachine(machineID):
-    """
-    Delete a DSD machine. 
-    Return 200 OK code for success, 204 No Content if id is not found.
-    """
-    machine = dsdMachines.query.get(machineID)
+    elif request.method == "DELETE":
+        db.session.delete(machineID)
+        db.session.commit()
 
-    if machine is None:
-        return jsonify({"result": False}), 204
+        return jsonify({"result": "DSD machine " + machineID + " deleted"}), 200
 
-    db.session.delete(machine)
-    db.session.commit()
-
-    return jsonify({"result": True}), 200
+    else:
+        return "", 400
 
 
 
