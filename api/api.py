@@ -1,14 +1,21 @@
 from flask import Flask, request, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from ConfigParser import ConfigParser
 
 
 # Create the app
 app = Flask(__name__)
 
+# Get our config info
+config = ConfigParser()
+config.read("/etc/webconfigs/scopeandtrack/config.txt")
+
+db_uri = config.get("db", "mysql_db_uri")
 
 # Setup database connection
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://scopeandtrackAdmin:T@ylor8575@localhost/scopeandtrack"
+# app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://scopeandtrackAdmin:T@ylor8575@localhost/scopeandtrack"
+app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 db = SQLAlchemy(app)
@@ -557,16 +564,9 @@ def createDSDMachine(orgID):
 
     # Make our date string something the query can understand. We have to send
     # a datetime.date object
-    # dateLast = incoming.get("dateLastMaintenance").split('-')
-    # dateNext = incoming.get("dateNextMaintenance").split('-')
     dateLast = datetime.strptime(incoming.get("dateLastMaintenance"), "%Y-%m-%d")
     dateNext = datetime.strptime(incoming.get("dateNextMaintenance"), "%Y-%m-%d")
     
-    # machine = dsdMachines(None, incoming.get("make"), incoming.get("model"), 
-    #                       incoming.get("serial"), incoming.get("nickname"),
-    #                       datetime.date(int(dateLast[0]), int(dateLast[1]), int(dateLast[2])), 
-    #                       datetime.date(int(dateNext[0]), int(dateNext[1]), int(dateNext[2])), 
-    #                       orgID)
     machine = dsdMachines(None, incoming.get("make"), incoming.get("model"), 
                           incoming.get("serial"), incoming.get("nickname"),
                           dateLast, dateNext, orgID)
