@@ -559,8 +559,8 @@ def createDSDMachine(orgID):
     # a datetime.date object
     # dateLast = incoming.get("dateLastMaintenance").split('-')
     # dateNext = incoming.get("dateNextMaintenance").split('-')
-    dateLast = datetime.strptime(incoming.get("dateLastMaintenance"), "%y-%m-%d")
-    dateNext = datetime.strptime(incoming.get("dateNextMaintenance"), "%y-%m-%d")
+    dateLast = strptime(incoming.get("dateLastMaintenance"), "%y-%m-%d")
+    dateNext = strptime(incoming.get("dateNextMaintenance"), "%y-%m-%d")
     
     # machine = dsdMachines(None, incoming.get("make"), incoming.get("model"), 
     #                       incoming.get("serial"), incoming.get("nickname"),
