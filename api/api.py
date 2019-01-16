@@ -14,7 +14,6 @@ config.read("/etc/webconfigs/scopeandtrack/config.txt")
 db_uri = config.get("db", "mysql_db_uri")
 
 # Setup database connection
-# app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://scopeandtrackAdmin:T@ylor8575@localhost/scopeandtrack"
 app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
