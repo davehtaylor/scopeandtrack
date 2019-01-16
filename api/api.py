@@ -517,7 +517,7 @@ def scopeByID(scopeID):
         return jsonify({"scope": scope.toJSON()}), 200
 
     elif request.method == "DELETE":
-        db.session.delete(scopeID)
+        db.session.delete(scope)
         db.session.commit()
 
         return jsonify({"result": "Scope " + str(scopeID) + " deleted"}), 200
