@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from ConfigParser import ConfigParser
+from configparser import ConfigParser
 
 
 # Create the app
