@@ -393,8 +393,7 @@ def userByID(userID):
         incoming = request.get_json()
 
         mandatory = [incoming.get("firstName"), incoming.get("lastName"),
-                     incoming.get("username"), ncoming.get("password"),
-                     incoming.get("privLevel")]
+                     incoming.get("username"), incoming.get("privLevel")]
 
         if None in mandatory:
             return jsonify({"error": "Missing required fields: firstName, lastName, username, password, or privLevel"}), 400
@@ -402,7 +401,6 @@ def userByID(userID):
         user.firstName = incoming.get("firstName")
         user.lastName = incoming.get("lastName")
         user.username = incoming.get("username")
-        user.password = incoming.get("password")
         user.privLevel = incoming.get("privLevel")
 
         db.session.commit()
@@ -410,7 +408,7 @@ def userByID(userID):
         return jsonify({"user": user.toJSON()}), 200
 
     elif request.method == "DELETE":
-        db.session.delete(userID)
+        db.session.delete(user)
         db.session.commit()
 
         return jsonify({"result": "User " + str(userID) + " deleted"}), 200

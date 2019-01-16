@@ -1,3 +1,3 @@
-#Scope&Track
+# Scope&Track
 
-###Endoscope decontamination and reprocessing log
+### Endoscope decontamination and reprocessing log
