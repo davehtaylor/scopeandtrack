@@ -640,7 +640,7 @@ def dsdMachineByID(machineID):
         return jsonify({"machine": machine.toJSON()}), 200
 
     elif request.method == "DELETE":
-        db.session.delete(machineID)
+        db.session.delete(machine)
         db.session.commit()
 
         return jsonify({"result": "DSD machine " + str(machineID) + " deleted"}), 200
