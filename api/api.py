@@ -1,4 +1,5 @@
-from flask import Flask, request, jsonify, abort, session, redirect, url_for, escape
+from flask import Flask, request, jsonify, abort, session, redirect
+from flask import url_for, escape, render_template
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from configparser import ConfigParser
@@ -676,9 +677,10 @@ def dsdMachineByID(machineID):
 
 @app.route('/')
 def index():
-    if 'username' in session:
-        return 'Logged in as %s' % escape(session['username'])
-    return 'You are not logged in'
+    # if 'username' in session:
+    #     return 'Logged in as %s' % escape(session['username'])
+    # return 'You are not logged in'
+    return render_template("index.html", title="Home")
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
