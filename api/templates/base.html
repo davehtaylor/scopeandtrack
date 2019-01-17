@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    {% if title %}
+    <title>{{ title }} - Scope&Track</title>
+    {% else %}
+    <title>Scope&Track</title>
+    {% endif %}
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/static/css/layout.css">
+
+  </head>
+
+  <body>
+    <h1>Scope&Track</h1>
+    <h2>Endoscope decontamination and reprocessing log</h2>
+    {% block content %}{% endblock %}
+  </body>
+
+</html>
