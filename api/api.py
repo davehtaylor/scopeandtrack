@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, abort
+from flask import Flask, request, jsonify, abort, session, redirect, url_for, escape
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from configparser import ConfigParser
@@ -12,6 +12,7 @@ config = ConfigParser()
 config.read("/etc/webconfigs/scopeandtrack/config.txt")
 
 db_uri = config.get("db", "mysql_db_uri")
+app.secret_key = config.get("app", "app_secret")
 
 # Setup database connection
 app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
@@ -35,7 +36,7 @@ class organizations(db.Model):
     """
     __tablename__ = "organizations"
     orgID = db.Column(db.Integer, primary_key = True, unique = True)
-    name = db.Column(db.String(255), unique = True, nullable = False)
+    name = db.Column(db.String(255), nullable = False)
     address1 = db.Column(db.String(255), nullable = False)
     address2 = db.Column(db.String(255))
     city = db.Column(db.String(255), nullable = False)
@@ -227,7 +228,8 @@ def orgs():
     """
     if request.method == "POST":
         if not request.json:
-            return jsonify({"error": "No properly formatted JSON request was recieved"}), 400
+            return jsonify({"error": "No properly formatted JSON request " +
+                            "was recieved"}), 400
 
         incoming = request.get_json()
         
@@ -238,12 +240,16 @@ def orgs():
                      incoming.get("primaryContact")]
         
         if None in mandatory:
-            return jsonify({"error": "Missing required fields: name, address1, city, state, zipCode, country, phone1, email, or primaryContact"}), 400
+            return jsonify({"error": "Missing required fields: name, address1, " + 
+                            "city, state, zipCode, country, phone1, email, " +
+                            "or primaryContact"}), 400
 
-        org = organizations(None, incoming.get("name"), incoming.get("address1"), incoming.get("address2"),
-                            incoming.get("city"), incoming.get("state"), incoming.get("zipCode"),
-                            incoming.get("country"), incoming.get("phone1"), incoming.get("phone2"),
-                            incoming.get("email1"), incoming.get("email2"), incoming.get("primaryContact"))
+        org = organizations(None, incoming.get("name"), incoming.get("address1"), 
+                            incoming.get("address2"),incoming.get("city"), 
+                            incoming.get("state"), incoming.get("zipCode"),
+                            incoming.get("country"), incoming.get("phone1"), 
+                            incoming.get("phone2"), incoming.get("email1"), 
+                            incoming.get("email2"), incoming.get("primaryContact"))
 
         db.session.add(org)
         db.session.commit()
@@ -286,7 +292,9 @@ def orgsByID(orgID):
                      incoming.get("primaryContact")]
         
         if None in mandatory:
-            return jsonify({"error": "Missing required fields: name, address1, city, state, zipCode, country, phone1, email, or primaryContact"}), 400
+            return jsonify({"error": "Missing required fields: name, address1, " +
+                            "city, state, zipCode, country, phone1, email, " +
+                            "or primaryContact"}), 400
 
         org.name = incoming.get("name")
         org.address1 = incoming.get("address1")
@@ -341,7 +349,8 @@ def createUser(orgID):
                  incoming.get("privLevel")]
 
     if None in mandatory:
-        return jsonify({"error": "Missing required fields: firstName, lastName, username, password, or privLevel"}), 400
+        return jsonify({"error": "Missing required fields: firstName, lastName, " +
+                        "username, password, or privLevel"}), 400
 
     user = users(None, incoming.get("firstName"), incoming.get("lastName"),
                  incoming.get("username"), incoming.get("password"),
@@ -402,7 +411,8 @@ def userByID(userID):
                      incoming.get("username"), incoming.get("privLevel")]
 
         if None in mandatory:
-            return jsonify({"error": "Missing required fields: firstName, lastName, username, password, or privLevel"}), 400
+            return jsonify({"error": "Missing required fields: firstName, " + 
+                            "lastName, username, password, or privLevel"}), 400
 
         user.firstName = incoming.get("firstName")
         user.lastName = incoming.get("lastName")
@@ -510,7 +520,8 @@ def scopeByID(scopeID):
                      incoming.get("inService")]
 
         if None in mandatory:
-            return jsonify({"error": "Missing required fields: make, model, serial, or inService"}), 400
+            return jsonify({"error": "Missing required fields: make, model, " +
+                            "serial, or inService"}), 400
 
         scope.make = incoming.get("make")
         scope.model = incoming.get("model")
@@ -559,7 +570,8 @@ def createDSDMachine(orgID):
                  incoming.get("dateLastMaintenance"), incoming.get("dateNextMaintenance")]
 
     if None in mandatory:
-        return jsonify({"error": "Missing required fields: make, model, serial, dateLastMaintenance, or dateNextMaintenance"}), 400
+        return jsonify({"error": "Missing required fields: make, model, serial, " +
+                        "dateLastMaintenance, or dateNextMaintenance"}), 400
 
     # Make our date string something the query can understand. We have to send
     # a datetime.date object
@@ -625,7 +637,8 @@ def dsdMachineByID(machineID):
                      incoming.get("dateLastMaintenance"), incoming.get("dateNextMaintenance")]
 
         if None in mandatory:
-            return jsonify({"error": "Missing required fields: make, model, serial, dateLastMaintenance, or dateNextMaintenance"}), 400
+            return jsonify({"error": "Missing required fields: make, model, " +
+                            "serial, dateLastMaintenance, or dateNextMaintenance"}), 400
 
         machine.name = incoming.get("make")
         machine.model = incoming.get("model")
@@ -657,10 +670,33 @@ def dsdMachineByID(machineID):
 
 
 
-@app.route('/')
-def root():
-    return app.send_static_file('index.html')
+# @app.route('/')
+# def root():
+#     return app.send_static_file('index.html')
 
+@app.route('/')
+def index():
+    if 'username' in session:
+        return 'Logged in as %s' % escape(session['username'])
+    return 'You are not logged in'
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        session['username'] = request.form['username']
+        return redirect(url_for('index'))
+    return '''
+        <form method="post">
+            <p><input type=text name=username>
+            <p><input type=submit value=Login>
+        </form>
+    '''
+
+@app.route('/logout')
+def logout():
+    # remove the username from the session if it's there
+    session.pop('username', None)
+    return redirect(url_for('index'))
 
 if __name__ == "__main__":
     app.run()
