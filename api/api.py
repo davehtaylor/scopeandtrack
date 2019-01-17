@@ -682,7 +682,7 @@ def index():
         user = users.query.filter(users.username == session["username"]).first()
         print("USER: " + user.firstName + " " + user.lastName)
     
-    return render_template("index.html", user = user[0])
+    return render_template("index.html", user = user)
 
     
 
