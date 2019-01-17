@@ -679,7 +679,7 @@ def dsdMachineByID(machineID):
 def index():
     user = None
     if 'username' in session:
-        user = users.query.filter(users.username == "username")
+        user = users.query.filter(users.username == "username").first()
         print("USER: " + user.firstName + " " + user.lastName)
     
     return render_template("index.html", user = user)
