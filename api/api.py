@@ -677,6 +677,7 @@ def dsdMachineByID(machineID):
 
 @app.route('/')
 def index():
+    user = None
     if 'username' in session:
         user = users.query.filter(users.username == "username")
     
