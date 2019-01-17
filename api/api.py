@@ -676,11 +676,9 @@ def dsdMachineByID(machineID):
 #     return app.send_static_file('index.html')
 
 @app.route('/')
-def index():
-    
+def index():    
     return render_template("index.html")
 
-    
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -701,13 +699,15 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('index'))
 
-if __name__ == "__main__":
-    app.run()
-
 @app.route('/profile')
-def render_profile():
+def profile():
     user = None
     if 'username' in session:
         user = users.query.filter(users.username == session["username"]).first()
     
     return render_template("profile.html", user = user)
+
+
+
+if __name__ == "__main__":
+    app.run()
