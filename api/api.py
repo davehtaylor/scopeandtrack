@@ -678,9 +678,10 @@ def dsdMachineByID(machineID):
 @app.route('/')
 def index():
     if 'username' in session:
-        user = users.query.filter(user.username == "username")
-        return render_template("index.html", user = user)
-    return render_template("index.html")
+        user = users.query.filter(users.username == "username")
+    
+    return render_template("index.html", user = user)
+
     
 
 @app.route('/login', methods=['GET', 'POST'])
