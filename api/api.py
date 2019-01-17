@@ -680,7 +680,7 @@ def index():
     user = None
     if 'username' in session:
         user = [u for u in users.query.filter(users.username == "username")]
-        print("USER: " + user.firstName + " " + user.lastName)
+        print("USER: " + user[0].firstName + " " + user[0].lastName)
     
     return render_template("index.html", user = user[0])
 
