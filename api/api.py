@@ -677,15 +677,16 @@ def dsdMachineByID(machineID):
 
 @app.route('/')
 def index():
-    # if 'username' in session:
-    #     return 'Logged in as %s' % escape(session['username'])
-    # return 'You are not logged in'
-    return render_template("index.html")
+    if 'username' in session:
+        user = users.query.filer(user.username="username")
+
+    return render_template("index.html", user=user)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         session['username'] = request.form['username']
+
         return redirect(url_for('index'))
     return '''
         <form method="post">
