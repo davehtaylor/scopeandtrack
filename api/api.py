@@ -678,7 +678,7 @@ def dsdMachineByID(machineID):
 @app.route('/')
 def index():
     if 'username' in session:
-        user = users.query.filer(user.username="username")
+        user = users.query.filer(user.username == "username")
 
     return render_template("index.html", user=user)
 
