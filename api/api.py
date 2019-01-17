@@ -686,12 +686,7 @@ def login():
         session['username'] = request.form['username']
 
         return redirect(url_for('profile'))
-    return '''
-        <form method="post">
-            <p><input type=text name=username>
-            <p><input type=submit value=Login>
-        </form>
-    '''
+    return render_template("login.html")
 
 @app.route('/logout')
 def logout():
