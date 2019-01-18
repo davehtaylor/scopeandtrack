@@ -717,11 +717,11 @@ def login():
             # Validate the password and log them in if valid
             if bcrypt.check_password_hash(user.password, pLogin):
                 session['username'] = uLogin
-                flash("Login successful")
                 return redirect(url_for('profile'))
             # Throw an error
             else:
-                error = "Invalid login credentials"
+                flash("Invalid login credentials")
+                return redirect(url_for('login'))
 
     return render_template("login.html")
 
