@@ -720,7 +720,7 @@ def login():
             # Validate the password and log them in if valid
             if bcrypt.check_password_hash(user.password, pLogin):
                 session['username'] = uLogin
-                return redirect(url_for('profile', user=user))
+                return redirect(url_for('profile'))
             # Throw an error
             else:
                 error = "Invalid password"
@@ -740,12 +740,8 @@ def logout():
 
 @app.route('/profile')
 def profile():
-    # user = None
-
-    # if 'username' in session:
-    #     user = users.query.filter(users.username == session["username"]).first()
-
-    return render_template("profile.html")
+    user = users.query.filter(users.username == session["username"]).first()
+    return render_template("profile.html", user=user)
 
 
 
