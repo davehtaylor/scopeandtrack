@@ -18,6 +18,17 @@
     <h1>Scope&Track</h1>
     <h2>Endoscope decontamination and reprocessing log</h2>
 
+    <!-- Get any flashed messages -->
+    {% with messages = get_flash_messages() %}
+      {% if messages %}
+        <ul class=flashes>
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
     {% block content %}{% endblock %}
   </body>
 

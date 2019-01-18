@@ -2,6 +2,10 @@
 
 {% block content %}
 
+  {% if error %}
+    <p class=error><storng>Error:</storng> {{ error }}
+  {% endif %}
+
   <form method="post">
     <p>Username: <input type=text name=username>
     <p>Password: <input type=password name=password>
