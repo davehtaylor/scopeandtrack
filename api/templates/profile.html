@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+
   {% if user != None %}
   
   <a href="logout">Logout</a>
@@ -8,5 +9,7 @@
   <h3>Hi, {{ user.firstName }}  {{ user.lastName }}</h3>
 
   {% else %}
+
   {% endif %}
+
 {% endblock %}

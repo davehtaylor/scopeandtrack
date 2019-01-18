@@ -3,10 +3,12 @@ from flask import url_for, escape, render_template
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from configparser import ConfigParser
+from flask_bcrypt import Bcrypt
 
 
 # Create the app
 app = Flask(__name__)
+bcrypt = Bcrypt()
 
 # Get our config info
 config = ConfigParser()
@@ -665,6 +667,21 @@ def dsdMachineByID(machineID):
 
 ###############################################################################
 #                                                                             #
+#                               Helper methods                                #
+#                                                                             #
+###############################################################################
+
+
+def verifyPassword(user):
+    """
+    Verify passwords for login
+    """
+
+    return None
+
+
+###############################################################################
+#                                                                             #
 #                             Main page endpoints                             #
 #                                                                             #
 ###############################################################################
@@ -684,7 +701,6 @@ def index():
 def login():
     if request.method == 'POST':
         session['username'] = request.form['username']
-
         return redirect(url_for('profile'))
     return render_template("login.html")
 
@@ -696,10 +712,12 @@ def logout():
 
 @app.route('/profile')
 def profile():
+    
     user = None
+
     if 'username' in session:
         user = users.query.filter(users.username == session["username"]).first()
-    
+
     return render_template("profile.html", user = user)
 
 
