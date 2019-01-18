@@ -706,12 +706,13 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    error = None
+
     if request.method == 'POST':
 
         uLogin = request.form["username"]
         pLogin = request.form["password"]
         user = None
-        error = None
         user = users.query.filter(users.username == uLogin).first()
 
         if user != None:
@@ -722,9 +723,8 @@ def login():
             # Throw an error
             else:
                 error = "Invalid login credentials"
-                return redirect(url_for('login'), error=error)
 
-    return render_template("login.html")
+    return render_template("login.html", error=error)
 
 
 @app.route('/logout')
