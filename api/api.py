@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, abort, session, redirect
-from flask import url_for, escape, render_template
+from flask import flash, url_for, escape, render_template
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from configparser import ConfigParser
@@ -672,12 +672,23 @@ def dsdMachineByID(machineID):
 ###############################################################################
 
 
-def verifyPassword(user):
+def hashPassword(user, passToHash):
+    """
+    Hash password for secure storage
+    """
+
+    return None
+
+
+def verifyPassword(user, passToVerify):
     """
     Verify passwords for login
     """
 
-    return None
+    if passToVerify == user.password:
+        return True
+
+    return False
 
 
 ###############################################################################
@@ -688,10 +699,6 @@ def verifyPassword(user):
 
 
 
-# @app.route('/')
-# def root():
-#     return app.send_static_file('index.html')
-
 @app.route('/')
 def index():    
     return render_template("index.html")
@@ -700,15 +707,31 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        session['username'] = request.form['username']
-        return redirect(url_for('profile'))
+
+        uLogin = request.form["username"]
+        pLogin = request.form["password"]
+        user = None
+        user = users.query.filter(users.username == uLogin).first()
+
+        if user != None:
+            # Validate the password and log them in if valid
+            if bcrypt.check_password_hash(user.password, pLogin)
+                session['username'] = uLogin
+                return redirect(url_for('profile'))
+            # Throw an error
+            else:
+                flash("Invalid login")
+
+
     return render_template("login.html")
+
 
 @app.route('/logout')
 def logout():
     # remove the username from the session if it's there
     session.pop('username', None)
     return redirect(url_for('index'))
+
 
 @app.route('/profile')
 def profile():
