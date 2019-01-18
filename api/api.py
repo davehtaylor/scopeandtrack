@@ -715,11 +715,12 @@ def login():
         user = None
         user = users.query.filter(users.username == uLogin).first()
 
+        # Make sure the user exists
         if user != None:
             # Validate the password and log them in if valid
             if bcrypt.check_password_hash(user.password, pLogin):
                 session['username'] = uLogin
-                return redirect(url_for('profile'))
+                return redirect(url_for('profile', user=user))
             # Throw an error
             else:
                 error = "Invalid password"
@@ -731,18 +732,18 @@ def login():
 
 @app.route('/logout')
 def logout():
-    # remove the username from the session if it's there
+    # Remove the username from the session if it's there and go back to the
+    # home page
     session.pop('username', None)
     return redirect(url_for('index'))
 
 
 @app.route('/profile')
 def profile():
-    
-    user = None
+    # user = None
 
-    if 'username' in session:
-        user = users.query.filter(users.username == session["username"]).first()
+    # if 'username' in session:
+    #     user = users.query.filter(users.username == session["username"]).first()
 
     return render_template("profile.html", user = user)
 
