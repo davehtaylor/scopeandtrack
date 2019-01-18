@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-  {% if user != None %}
   
   <a href="logout">Logout</a>
 
   <h3>Hi, {{ user.firstName }}  {{ user.lastName }}</h3>
+
+  {% if user.privLevel == 0 %}
 
   {% else %}
 

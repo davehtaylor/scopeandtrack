@@ -723,6 +723,8 @@ def login():
             # Throw an error
             else:
                 error = "Invalid login credentials"
+        else:
+            error = "User " + uLogin + " not found"
 
     return render_template("login.html", error=error)
 
