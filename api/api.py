@@ -722,7 +722,7 @@ def login():
                 return redirect(url_for('profile'))
             # Throw an error
             else:
-                error = "Invalid login credentials"
+                error = "Invalid password"
         else:
             error = "User " + uLogin + " not found"
 
