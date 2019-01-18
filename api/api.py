@@ -715,13 +715,12 @@ def login():
 
         if user != None:
             # Validate the password and log them in if valid
-            if bcrypt.check_password_hash(user.password, pLogin)
+            if bcrypt.check_password_hash(user.password, pLogin):
                 session['username'] = uLogin
                 return redirect(url_for('profile'))
             # Throw an error
             else:
                 flash("Invalid login")
-
 
     return render_template("login.html")
 
