@@ -745,7 +745,7 @@ def profile():
     # if 'username' in session:
     #     user = users.query.filter(users.username == session["username"]).first()
 
-    return render_template("profile.html", user = user)
+    return render_template("profile.html")
 
 
 
