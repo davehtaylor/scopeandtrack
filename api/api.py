@@ -711,6 +711,7 @@ def login():
         uLogin = request.form["username"]
         pLogin = request.form["password"]
         user = None
+        error = None
         user = users.query.filter(users.username == uLogin).first()
 
         if user != None:
@@ -720,8 +721,8 @@ def login():
                 return redirect(url_for('profile'))
             # Throw an error
             else:
-                flash("Invalid login credentials")
-                return redirect(url_for('login'))
+                error = "Invalid login credentials"
+                return redirect(url_for('login') error=error)
 
     return render_template("login.html")
 
