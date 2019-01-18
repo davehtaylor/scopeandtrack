@@ -722,7 +722,7 @@ def login():
             # Throw an error
             else:
                 error = "Invalid login credentials"
-                return redirect(url_for('login') error=error)
+                return redirect(url_for('login'), error=error)
 
     return render_template("login.html")
 
