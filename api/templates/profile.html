@@ -5,6 +5,11 @@
   <a href="logout">Logout</a>
 
   <h3>Hi, {{ user.firstName }}  {{ user.lastName }}</h3>
+  <p>
+  Username: {{ user.username }}
+  Privilege Level: {{ user.privLevel }} 
+  Organization ID: {{ user.orgID }}
+  </p>
 
   {% if user.privLevel == 0 %}
 
