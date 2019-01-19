@@ -2,7 +2,7 @@ let baseURL = "http://www.scopeandtrack.com/api"
 
 function getAllOrgs() {
     let req = new XMLHttpRequest();
-    url = baseURL + "/api/organizations";
+    url = baseURL + "/organizations";
 
     req.open("GET", url, true);
 
