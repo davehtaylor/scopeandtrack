@@ -2,7 +2,7 @@ let baseURL = "http://www.scopeandtrack.com/api"
 
 function getAllOrgs() {
     let req = new XMLHttpRequest();
-    url = baseURL + "/api/organizations"
+    url = baseURL + "/api/organizations";
 
     req.open("GET", url, true);
 
@@ -17,7 +17,7 @@ function getAllOrgs() {
             });
         }
         else {
-            console.log("Could not get organizations")
+            console.log("Could not get organizations");
         }
     }
 
