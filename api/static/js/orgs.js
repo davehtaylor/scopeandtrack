@@ -1,4 +1,4 @@
-let baseURL = "http://www.scopeandtrack.com/api"
+let baseURL = "https://www.scopeandtrack.com/api"
 
 function getAllOrgs() {
     let req = new XMLHttpRequest();
