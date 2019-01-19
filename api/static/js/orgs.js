@@ -12,7 +12,7 @@ function getAllOrgs() {
         let data = JSON.parse(this.response);
 
         if (req.status == 200) {
-            data.forEach( organization => {
+            data.organizations.forEach( organization => {
                 console.log(organization.name)
             });
         }
