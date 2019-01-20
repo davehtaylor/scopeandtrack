@@ -19,7 +19,7 @@ function getAllOrgs() {
 
             // Add the data from the API call to the list on the profile page
             let ul = document.getElementById("orgList");
-            let orgDiv = document.getElementByID("orgs");
+            let orgDiv = document.getElementById("orgs");
 
             data.organizations.forEach( organization => {
                 let li = document.createElement("li");
