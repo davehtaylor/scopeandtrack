@@ -1,5 +1,6 @@
 let baseURL = "https://www.scopeandtrack.com/api"
 
+
 function getAllOrgs() {
     let req = new XMLHttpRequest();
     url = baseURL + "/organizations";
@@ -13,7 +14,7 @@ function getAllOrgs() {
 
         if (req.status == 200) {
             data.organizations.forEach( organization => {
-                console.log(organization.name)
+                console.log(organization.name + " " + organization.orgID)
             });
         }
         else {
@@ -23,6 +24,7 @@ function getAllOrgs() {
 
     req.send();
 }
+
 
 function getOrgByID(orgID) {
 
