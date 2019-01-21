@@ -34,6 +34,7 @@ function getAllOrgs() {
             }
             else {
                 orgDiv.style.display = "none";
+                data = null;
             }
         }
         else {
