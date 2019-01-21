@@ -34,9 +34,7 @@ function getAllOrgs() {
             }
             else {
                 orgDiv.style.display = "none";
-                while (li.innerHTML != "") {
-                    ul.removeChild(li);
-                }
+                orgList.innerHTML = "";
             }
         }
         else {
