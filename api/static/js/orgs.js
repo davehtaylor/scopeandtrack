@@ -32,6 +32,7 @@ function getAllOrgs() {
             if (orgDiv.style.display === "none") {
                 orgDiv.style.display = "block";
             }
+            // Otherwise, hide the div and empty the list
             else {
                 orgDiv.style.display = "none";
                 orgList.innerHTML = "";
