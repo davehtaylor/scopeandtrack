@@ -20,7 +20,7 @@ p {
 }
 
 .formContainer {
-    display: grid;
+    display: inline-grid;
     grid-template-columns: auto auto;
     background-color: #464646;
     grid-gap: 10px;
