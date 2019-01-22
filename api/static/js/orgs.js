@@ -14,9 +14,9 @@ function createOrgFormSubmit() {
 
     let data = {};
 
-    orgForm.forEach( item => {
-        data[item.name] = item.value;
-    });
+    for (let i = 0; i < data.length; i++) {
+        data[item.elements[i].name] = item.elements[i].value;
+    }
 
     req.onload = function () {
         console.log(req.response);
