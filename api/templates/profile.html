@@ -21,7 +21,7 @@
   </div>
 
   <h3>Create new organization</h3>
-  <form id="createOrgForm" method="post" onClick="createOrgFormSubmit()">
+  <form id="createOrgForm" method="post">
     <p>Name: <input type=text name=name>
     <p>Address 1: <input type=password name=address1>
     <p>Address 2: <input type=password name=address2>
@@ -34,7 +34,7 @@
     <p>Email 1: <input type=password name=email1>
     <p>Email 2: <input type=password name=email2>
     <p>Primary Contact: <input type=password name=primaryContact>
-    <p><input type=submit value=Create>
+    <p><input type=submit onClick="createOrgFormSubmit()" value=Create>
   </form>
 
 {% endblock %}
