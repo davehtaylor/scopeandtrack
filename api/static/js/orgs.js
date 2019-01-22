@@ -90,7 +90,7 @@ function getAllOrgs() {
 
 function getOrgByID(orgID) {
     let req = new XMLHttpRequest();
-    url = baseURL + "/organizations/" + orgID;
+    url = baseURL + "/organizations" + orgID;
 
 
 }

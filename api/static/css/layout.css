@@ -17,3 +17,15 @@ p {
     font-family: Helvetica, Arial, sans-serif;
     color: white;
 }
+
+.formContainer {
+
+}
+
+#formLabels {
+
+}
+
+#formFields {
+    float: right;
+}
