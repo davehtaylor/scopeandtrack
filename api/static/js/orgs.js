@@ -19,6 +19,8 @@ function createOrgFormSubmit() {
         console.log(item.elements[i].name + " " + item.elements[i].value);
     }
 
+    console.log("Data: " + data);
+    
     req.onload = function () {
         console.log(req.response);
     }
