@@ -9,12 +9,14 @@ function createOrgFormSubmit() {
     let req = new XMLHttpRequest();
     url = baseURL + "/organizations";
     req.open("POST", url, true);
+    
+    req.onload = function() {    
 
-    let formData = new FormData(document.getElementById("createOrgForm"));
-    req.send(formData);
+        let formData = new FormData(document.getElementById("createOrgForm"));
+        req.send(formData);
 
-    console.log(req.response);
-
+        console.log(req.response);
+    }
     // orgForm.onsubmit = function(event) {
     //     console.log("Inside orgForm.onSubmit");
     //     event.preventDefault();
