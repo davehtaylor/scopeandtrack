@@ -228,7 +228,7 @@ class states(db.Model):
         }
 
 
-class countries(db.model):
+class countries(db.Model):
     __tablename__ = "countries"
     country_abbrev = db.Column(db.String(2), primary_key = True, unique = True)
     country = db.column(db.String(22))
