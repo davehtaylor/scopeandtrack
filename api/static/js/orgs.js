@@ -12,15 +12,20 @@ function createOrgFormSubmit() {
 
     for (let i = 0; i < orgForm.length; i++) {
         element = orgForm.elements[i];
-        newPair = { [element.name]: element.value };
+
+        if (element.value != "") {
+            newPair = { [element.name]: element.value };
+        }
+        else {
+            newPair = { [element.name]: null };
+        }
+        
 
         if (element.value != "Submit") {
             data = {...data, ...newPair};
         }
-
     }
 
-    console.log("Data: " + data);
     console.log("JSON data: " + JSON.stringify(data));
 
     req.onload = function () {
