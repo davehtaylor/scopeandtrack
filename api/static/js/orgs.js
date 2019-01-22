@@ -12,10 +12,12 @@ function createOrgFormSubmit() {
 
     let formData = new FormData(document.getElementById("createOrgForm"));
 
+    console.log(formData);
+
     req.onload = function () {
         console.log(req.response);
     }
-    
+
     req.send(formData);
 
     
