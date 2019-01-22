@@ -11,7 +11,7 @@ function createOrgFormSubmit() {
     req.open("POST", url, true);
 
     console.log("Number of elements in orgForm: " + orgForm.length);
-    console.log("Element 0: " + orgForm.elements[0]);
+    console.log("Element 0: " + orgForm.elements[0].name + " " + orgForm.elements[0].value);
 
     for (let i = 0; i < orgForm.length; i++) {
         // data[orgForm.elements[i].name] = orgFrom.elements[i].value;
