@@ -14,10 +14,11 @@ function createOrgFormSubmit() {
         element = orgForm.elements[i];
         
         if (element.value != "") {
-            data[element.name].push(element.value);    
+            // data[element.name].push(element.value);    
+            data = {...element.name, ...element.value};
         }
         else {
-            ata[element.name].push(null);
+            data = {...element.name, ...null};
         }
         console.log("Field name: " + element.name + "  Field value: " + element.value);
     }
