@@ -1,12 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-
   {% if error %}
     <p class=error><storng>Error:</storng> {{ error }}
   {% endif %}
 
-  
   <div class="formContainer">
     <form method="post">
       <div class="grid-item">Username:</div>
@@ -16,6 +14,4 @@
       <div class="grid-item"><input type="submit" value="Login"></div>
     </form>
   </div>
-  
-
 {% endblock %}

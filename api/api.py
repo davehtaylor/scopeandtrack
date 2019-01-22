@@ -780,7 +780,7 @@ def login():
         else:
             error = "User " + uLogin + " not found"
 
-    return render_template("login.html", error=error)
+    return render_template("login.html", error=error, title="Login")
 
 
 @app.route('/logout')
@@ -794,7 +794,7 @@ def logout():
 @app.route('/profile')
 def profile():
     user = users.query.filter(users.username == session["username"]).first()
-    return render_template("profile.html", user=user)
+    return render_template("profile.html", user=user, title="Profile")
 
 
 
