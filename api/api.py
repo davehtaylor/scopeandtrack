@@ -737,7 +737,7 @@ def getInfo(type):
         return jsonify({"states": sts}), 200
     elif type == "countries":
         cntrs = [c.toJSON() for c in countries.query.all()]
-        return jsonify({"countries": sts}), 200
+        return jsonify({"countries": cntrs}), 200
 
     return jsonify({"error": "Invalid request type. Accepted types are 'states' and 'countries'"}), 400
 
