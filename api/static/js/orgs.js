@@ -24,6 +24,7 @@ function createOrgFormSubmit() {
     }
 
     console.log("Data: " + data);
+    console.log("JSON data: " + JSON.stringify(data));
 
     req.onload = function () {
         console.log(req.response);
