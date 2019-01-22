@@ -16,31 +16,14 @@
 
   <div id="orgs" style="display: none;">
     <h3>Organizations</h3>
-    <ul id="orgList">
-    </ul>
+    <ul id="orgList"></ul>
   </div>
 
   <h3>Create new organization</h3>
   <div class="formContainer">
-    <!-- <form id="createOrgForm">
-      <p>Name: <input type=text name="name">
-      <p>Address 1: <input type="text" name="address1">
-      <p>Address 2: <input type="text" name="address2">
-      <p>City: <input type="text" name="city">
-      <p>State: <input type="text" name="state">
-      <p>Zip: <input type="text" name="zipCode">
-      <p>Country: <input type="text" name="country">
-      <p>Phone 1: <input type="text" name="phone1">
-      <p>Phone 2: <input type="text" name="phone2">
-      <p>Email 1: <input type="text" name="email1">
-      <p>Email 2: <input type="text" name="email2">
-      <p>Primary Contact: <input type="text" name=primaryContact>
-      <p><input type="button" onClick="createOrgFormSubmit()" value="Submit">
-    </form> -->
-
     <form id="createOrgForm">
       <div class="grid-item">Name:</div> 
-      <div class="grid-item"><input type=text name="name"></div> 
+      <div class="grid-item"><input type="text" name="name"></div> 
       <div class="grid-item">Address 1:</div>  
       <div class="grid-item"><input type="text" name="address1"></div> 
       <div class="grid-item">Address 2:</div> 
@@ -63,7 +46,7 @@
       <div class="grid-item"><input type="text" name="email2"></div>  
       <div class="grid-item">Primary Contact:</div>  
       <div class="grid-item"><input type="text" name="primaryContact"></div>  
-      <div class="grid-item"><input type="button" onClick="createOrgFormSubmit()" value="Submit"></div>
+      <div class="grid-item"><input type="button" onClick="createOrgFormSubmit()" value="Create"></div>
     </form>
   </div>
 {% endblock %}

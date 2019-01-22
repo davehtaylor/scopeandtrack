@@ -7,9 +7,14 @@
   {% endif %}
 
   <form method="post">
-    <p>Username: <input type=text name=username>
-    <p>Password: <input type=password name=password>
-    <p><input type=submit value=Login>
+    <div class="formContainer">
+      <div class="grid-item">Username:</div>
+      <div class="grid-item"><input type="text" name="username"></div>
+      <div class="grid-item">Password:</div>
+      <div class="grid-item"><input type="password" name="password"></div>
+      <div class="grid-item"><input type="submit" value="Login"></div>
+    </div>
+    
   </form>
 
 {% endblock %}
