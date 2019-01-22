@@ -215,7 +215,7 @@ class scopes(db.Model):
 class states(db.Model):
     __tablename__ = "states"
     state_abbrev = db.Column(db.String(2), primary_key = True, unique = True)
-    state = db.column(db.String(255))
+    state = db.Column(db.String(22))
 
     def __init__(self, state_abbrev, state):
         self.state_abbrev = state_abbrev
@@ -231,7 +231,7 @@ class states(db.Model):
 class countries(db.Model):
     __tablename__ = "countries"
     country_abbrev = db.Column(db.String(2), primary_key = True, unique = True)
-    country = db.column(db.String(255))
+    country = db.Column(db.String(100))
 
     def __init__(self, country_abbrev, country):
         self.country_abbrev = country_abbrev
