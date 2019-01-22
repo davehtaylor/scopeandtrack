@@ -10,22 +10,16 @@ function createOrgFormSubmit() {
     url = baseURL + "/organizations";
     req.open("POST", url, true);
 
-    console.log("Number of elements in orgForm: " + orgForm.length);
-
-    for (let i = 0; i < orgForm.length; i++){
-        console.log(orgForm.elements[i].name);
-    }
     for (let i = 0; i < orgForm.length; i++) {
-        // data[orgForm.elements[i].name] = orgFrom.elements[i].value;
         element = orgForm.elements[i];
-        console.log("Field name: " + element.name + "  Field value: " + element.value);
+        
         if (element.value != "") {
             data[element.name].push(element.value);    
         }
         else {
             ata[element.name].push(null);
         }
-        
+        console.log("Field name: " + element.name + "  Field value: " + element.value);
     }
 
     console.log("Data: " + data);
