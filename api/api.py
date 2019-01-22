@@ -735,6 +735,7 @@ def getInfo(type):
     if type == "states":
         sts = states.query.all()
         stateList = [s.toJSON() for s in sts]
+        print(stateList)
         return jsonify({"states": stateList}), 200
     elif type == "countries":
         cntrs = [c.toJSON() for c in countries.query.all()]
