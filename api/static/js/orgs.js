@@ -11,9 +11,14 @@ function createOrgFormSubmit() {
     req.open("POST", url, true);
 
     let formData = new FormData(document.getElementById("createOrgForm"));
+
+    req.onload = function () {
+        console.log(req.response);
+    }
+    
     req.send(formData);
 
-    console.log(req.response);
+    
 
     // orgForm.onClick = function(event) {
     //     console.log("Inside orgForm.onSubmit");
