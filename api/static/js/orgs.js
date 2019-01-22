@@ -12,6 +12,9 @@ function createOrgFormSubmit() {
 
     console.log("Number of elements in orgForm: " + orgForm.length);
 
+    for (let i = 0; i < orgForm.length; i++){
+        console.log(orgForm.elements[i].name);
+    }
     for (let i = 0; i < orgForm.length; i++) {
         // data[orgForm.elements[i].name] = orgFrom.elements[i].value;
         element = orgForm.elements[i];
