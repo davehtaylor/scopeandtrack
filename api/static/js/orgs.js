@@ -16,6 +16,7 @@ function createOrgFormSubmit() {
 
     for (let i = 0; i < data.length; i++) {
         data[item.elements[i].name] = item.elements[i].value;
+        console.log(item.elements[i].name + " " + item.elements[i].value);
     }
 
     req.onload = function () {
