@@ -2,6 +2,8 @@ let baseURL = "https://www.scopeandtrack.com/api"
 
 
 function createOrgFormSubmit() {
+    console.log("Create org form submit method called")
+    
     let orgForm = document.getElementById("createOrgForm");
 
     orgForm.onSubmit = function(event) {
