@@ -733,7 +733,8 @@ def verifyPassword(user, passToVerify):
 @app.route('/api/info/<type>', methods=["GET"])
 def getInfo(type):
     if type == "states":
-        sts = [s.toJSON() for s in states.query.all()]
+        sts = states.query.all()
+        stateList = [s.toJSON() for s in sts]
         return jsonify({"states": sts}), 200
     elif type == "countries":
         cntrs = [c.toJSON() for c in countries.query.all()]
