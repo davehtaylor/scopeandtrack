@@ -14,7 +14,7 @@ function getStates() {
             let dropdown = document.getElementById("stateSelect");
             
             data.states.forEach( state => {
-                dropdown[dropdown.length] = state.state_abbrev
+                dropdown[dropdown.length] = new Option(state.state_abbrev, state.state_abbrev);
             });    
         }
         else {
