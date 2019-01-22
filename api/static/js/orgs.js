@@ -5,18 +5,14 @@ function createOrgFormSubmit() {
     console.log("createOrgFormSubmit() function called");
 
     let orgForm = document.getElementById("createOrgForm");
+    let data = {};
     let req = new XMLHttpRequest();
     url = baseURL + "/organizations";
     req.open("POST", url, true);
 
-    // let formData = new FormData(document.getElementById("createOrgForm"));
-    // console.log(formData);
-
-    let data = {};
-
     for (let i = 0; i < orgForm.length; i++) {
         // data[orgForm.elements[i].name] = orgFrom.elements[i].value;
-        element = orgFrom.elements[i];
+        element = orgForm.elements[i];
         data[element.name].push(element.value);
         console.log(element.name + " " + element.value);
     }
