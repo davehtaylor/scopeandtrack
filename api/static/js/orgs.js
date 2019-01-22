@@ -6,7 +6,7 @@ function createOrgFormSubmit() {
 
     let orgForm = document.getElementById("createOrgForm");
 
-    orgForm.onsubmit = function(event) {
+    orgForm.onClick = function(event) {
         console.log("Inside orgForm.onSubmit");
         event.preventDefault();
 
