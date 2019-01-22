@@ -18,11 +18,7 @@ function createOrgFormSubmit() {
         req.send(formData);
 
         console.log(req.response);
-
-        return true;
     }
-
-    return false;
 }
 
 
