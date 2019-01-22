@@ -38,3 +38,9 @@ function getCountries() {
 
     req.send();
 }
+
+
+window.onload = function() {
+    getStates();
+    getCountries();
+}
