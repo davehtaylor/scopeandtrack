@@ -16,7 +16,7 @@ function createOrgFormSubmit() {
 
     for (let i = 0; i < orgForm.length; i++) {
         data[item.elements[i].name] = item.elements[i].value;
-        console.log(item.elements[i].name + " " + item.elements[i].value);
+        console.log(orgForm.elements[i].name + " " + orgForm.elements[i].value);
     }
 
     console.log("Data: " + data);
