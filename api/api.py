@@ -212,6 +212,38 @@ class scopes(db.Model):
         }
 
 
+class states(db.Model):
+    __tablename__ = "states"
+    state_abbrev = db.Column(db.String(2), primary_key = True, unique = True)
+    state = db.column(db.String(22))
+
+    def __init__(self, state_abbrev, state):
+        self.state_abbrev = state_abbrev
+        self.state = state
+
+    def toJSON(self):
+        return {
+            "state_abbrev": self.state_abbrev,
+            "state": self.state
+        }
+
+
+class countries(db.model):
+    __tablename__ = "countries"
+    country_abbrev = db.Column(db.String(2), primary_key = True, unique = True)
+    country = db.column(db.String(22))
+
+    def __init__(self, country_abbrev, country):
+        self.country_abbrev = country_abbrev
+        self.country = country
+
+    def toJSON(self):
+        return {
+            "country_abbrev": self.country_abbrev,
+            "country": self.country
+        }
+
+
 ###############################################################################
 #                                                                             #
 #                           organizations endpoints                           #
@@ -689,6 +721,25 @@ def verifyPassword(user, passToVerify):
         return True
 
     return False
+
+
+###############################################################################
+#                                                                             #
+#                             Helper endpoints                                #
+#                                                                             #
+###############################################################################
+
+
+@app.route('/info/<type>', methods=["GET"])
+def getInfo(type):
+    if type == "states":
+        sts = states.query.all()
+        return jsonify({"states": sts}), 200
+    elif type == "countries":
+        cntrs = countries.query.all()
+        return jsonify({"countries": sts}), 200
+
+    return jsonify({"error": "Invalid request type. Accepted types are 'states' and 'countries'"}), 400
 
 
 ###############################################################################
