@@ -14,7 +14,7 @@ function getStates() {
             let dropdown = document.getElementById("stateSelect");
             
             data.states.forEach( state => {
-                dropdown[dropdown.length] = new Option(state.state_abbrev, state.state_abbrev);
+                dropdown[dropdown.length] = new Option(state.state, state.state_abbrev);
                 console.log(state.state_abbrev);
             });    
         }
@@ -39,7 +39,7 @@ function getCountries() {
             let dropdown = document.getElementById("countrySelect");
             
             data.countries.forEach( country => {
-                dropdown[dropdown.length] = new Option(country.country_abbrev, country.country_abbrev);
+                dropdown[dropdown.length] = new Option(country.country, country.country_abbrev);
                 console.log(country.country_abbrev);
             });    
         }
