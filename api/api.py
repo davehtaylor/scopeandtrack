@@ -230,7 +230,7 @@ def orgs():
     creation, or 400 Bad Request otherwise.
     """
     if request.method == "POST":
-        if !request.json:
+        if not request.json:
             return jsonify({"error": "No properly formatted JSON request " +
                             "was recieved"}), 400
 
