@@ -2,11 +2,6 @@ let baseURL = "https://www.scopeandtrack.com/api"
 
 
 function getStates() {
-    let dropdown = document.getElementById("stateSelect");
-    dropdown.Attributes.Add("onChange", "return getStatesHelper();");
-}
-
-function getStatesHelper() {
     let req = new XMLHttpRequest();
     url = baseURL + "/info/states";
     req.open("GET", url, true);
