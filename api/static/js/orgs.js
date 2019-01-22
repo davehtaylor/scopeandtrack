@@ -13,10 +13,12 @@ function createOrgFormSubmit() {
     for (let i = 0; i < orgForm.length; i++) {
         element = orgForm.elements[i];
         console.log("Field name: " + element.name + "  Field value: " + element.value);
-        data = {...element.name, ...element.value};
+        if (element.value != "Submit"){
+            data = {...element.name, ...element.value};
+        }
+
     }
 
-    console.log("Data: " + data);
     console.log("JSON data: " + JSON.stringify(data));
 
     req.onload = function () {
