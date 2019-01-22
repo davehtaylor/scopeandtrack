@@ -7,6 +7,7 @@ function createOrgFormSubmit() {
     let orgForm = document.getElementById("createOrgForm");
     let data = {};
     let req = new XMLHttpRequest();
+
     url = baseURL + "/organizations";
     req.open("POST", url, true);
     req.setRequestHeader("Content-Type", "application/json");
@@ -14,6 +15,7 @@ function createOrgFormSubmit() {
     for (let i = 0; i < orgForm.length; i++) {
         element = orgForm.elements[i];
 
+        // Check for empty values and set them to null if they're just ""
         if (element.value != "") {
             newPair = { [element.name]: element.value };
         }
@@ -21,7 +23,7 @@ function createOrgFormSubmit() {
             newPair = { [element.name]: null };
         }
         
-
+        // This loop wants to grab the Submit button too. Don't want that
         if (element.value != "Submit") {
             data = {...data, ...newPair};
         }
@@ -34,6 +36,7 @@ function createOrgFormSubmit() {
     }
 
     req.send(JSON.stringify(data));
+    orgForm.reset();
 }
 
 
