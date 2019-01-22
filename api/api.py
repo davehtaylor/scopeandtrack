@@ -730,7 +730,7 @@ def verifyPassword(user, passToVerify):
 ###############################################################################
 
 
-@app.route('/info/<type>', methods=["GET"])
+@app.route('/api/info/<type>', methods=["GET"])
 def getInfo(type):
     if type == "states":
         sts = states.query.all()
