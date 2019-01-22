@@ -14,13 +14,13 @@ function createOrgFormSubmit() {
 
     let data = {};
 
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 0; i < orgForm.length; i++) {
         data[item.elements[i].name] = item.elements[i].value;
         console.log(item.elements[i].name + " " + item.elements[i].value);
     }
 
     console.log("Data: " + data);
-    
+
     req.onload = function () {
         console.log(req.response);
     }
