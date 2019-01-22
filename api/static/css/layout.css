@@ -20,8 +20,12 @@ p {
 }
 
 .formContainer {
+
+}
+
+form {
     display: inline-grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: repeat(2, 1fr);
     background-color: #464646;
     grid-gap: 10px;
 }
