@@ -1,6 +1,3 @@
-let baseURL = "https://www.scopeandtrack.com/api"
-
-
 function createOrgFormSubmit() {
     let orgForm = document.getElementById("createOrgForm");
     let data = {};
