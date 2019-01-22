@@ -733,10 +733,10 @@ def verifyPassword(user, passToVerify):
 @app.route('/api/info/<type>', methods=["GET"])
 def getInfo(type):
     if type == "states":
-        sts = states.query.all()
+        sts = [s.toJSON() for s in states.query.all()]
         return jsonify({"states": sts}), 200
     elif type == "countries":
-        cntrs = countries.query.all()
+        cntrs = [c.toJSON() for c in countries.query.all()]
         return jsonify({"countries": sts}), 200
 
     return jsonify({"error": "Invalid request type. Accepted types are 'states' and 'countries'"}), 400
