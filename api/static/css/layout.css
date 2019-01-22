@@ -22,12 +22,9 @@ p {
 .formContainer {
     display: grid;
     grid-template-columns: auto auto;
+    background-color: #464646;
 }
 
-#formLabels {
-
-}
-
-#formFields {
-    
+.grid-item {
+    background-color: white;
 }
