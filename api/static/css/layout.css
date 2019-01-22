@@ -20,7 +20,8 @@ p {
 }
 
 .formContainer {
-
+    display: grid;
+    grid-template-columns: auto auto;
 }
 
 #formLabels {
@@ -28,5 +29,5 @@ p {
 }
 
 #formFields {
-    float: right;
+    
 }
