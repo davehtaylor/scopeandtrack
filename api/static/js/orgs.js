@@ -12,7 +12,7 @@ function createOrgFormSubmit() {
 
     for (let i = 0; i < orgForm.length; i++) {
         element = orgForm.elements[i];
-        newPair = {element.name: element.value};
+        newPair = { [element.name]: element.value };
 
         if (element.value != "Submit") {
             data = {...data, ...newPair};
