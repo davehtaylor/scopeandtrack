@@ -1,6 +1,24 @@
 let baseURL = "https://www.scopeandtrack.com/api"
 
 
+function createOrgFormSubmit() {
+    let orgForm = document.getElementById("createOrgForm");
+
+    orgForm.onSubmit = function(event) {
+        event.preventDefault();
+
+        let req = new XMLHttpRequest();
+        url = baseURL + "/organizations";
+        req.open("POST", url, true);
+
+        let formData = new FormData(document.getElementById("createOrgForm"));
+        req.send(formData);
+
+        console.log(req.response);
+    }
+}
+
+
 function getAllOrgs() {
     let req = new XMLHttpRequest();
     url = baseURL + "/organizations";
