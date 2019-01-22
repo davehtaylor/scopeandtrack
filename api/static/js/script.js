@@ -15,7 +15,6 @@ function getStates() {
             
             data.states.forEach( state => {
                 dropdown[dropdown.length] = new Option(state.state, state.state_abbrev);
-                console.log(state.state_abbrev);
             });    
         }
         else {
@@ -40,7 +39,6 @@ function getCountries() {
             
             data.countries.forEach( country => {
                 dropdown[dropdown.length] = new Option(country.country, country.country_abbrev);
-                console.log(country.country_abbrev);
             });    
         }
         else {
