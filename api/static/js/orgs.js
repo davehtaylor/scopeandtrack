@@ -12,15 +12,8 @@ function createOrgFormSubmit() {
 
     for (let i = 0; i < orgForm.length; i++) {
         element = orgForm.elements[i];
-        
-        if (element.value != "") {
-            // data[element.name].push(element.value);    
-            data = {...element.name, ...element.value};
-        }
-        else {
-            data = {...element.name, ...null};
-        }
         console.log("Field name: " + element.name + "  Field value: " + element.value);
+        data = {...element.name, ...element.value};
     }
 
     console.log("Data: " + data);
