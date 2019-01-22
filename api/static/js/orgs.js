@@ -7,9 +7,9 @@ function createOrgFormSubmit() {
     let orgForm = document.getElementById("createOrgForm");
     let data = {};
     let req = new XMLHttpRequest();
-    req.setRequestHeader("Content-Type", "application/json");
     url = baseURL + "/organizations";
     req.open("POST", url, true);
+    req.setRequestHeader("Content-Type", "application/json");
 
     for (let i = 0; i < orgForm.length; i++) {
         element = orgForm.elements[i];
