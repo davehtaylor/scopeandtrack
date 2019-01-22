@@ -50,10 +50,6 @@ function getAllOrgs() {
         let data = JSON.parse(this.response);
 
         if (req.status == 200) {
-            // data.organizations.forEach( organization => {
-            //     console.log(organization.name + " " + organization.orgID)
-            // });
-
             // Add the data from the API call to the list on the profile page
             let ul = document.getElementById("orgList");
             let orgDiv = document.getElementById("orgs");

@@ -1,19 +1,39 @@
 let baseURL = "https://www.scopeandtrack.com/api"
 
 
-function getZipCodes() {
+function getStates() {
     let req = new XMLHttpRequest();
-    url = baseURL + "";
+    url = baseURL + "/info/states";
     req.open("GET", url, true);
 
     req.onload = function () {
 
+        let data = JSON.parse(this.response);
+
+        if (req.status == 200) {
+            let dropdown = document.getElementById("stateSelect");
+            
+            data.states.forEach( state => {
+                dropdown[dropdown.length] = state.state_abbrev
+            });    
+        }
+        else {
+            console.log("Could not get states");
+        }
     }
 
     req.send();
 }
 
 
-function getStates() {
+function getCountries() {
+    let req = new XMLHttpRequest();
+    url = baseURL + "/info/countries";
+    req.open("GET", url, true);
 
+    req.onload = function () {
+        let dropdown = document.getElementById("countrySelect")
+    }
+
+    req.send();
 }
