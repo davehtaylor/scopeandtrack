@@ -5,36 +5,24 @@ function createOrgFormSubmit() {
     console.log("createOrgFormSubmit() function called");
 
     let orgForm = document.getElementById("createOrgForm");
-
     let req = new XMLHttpRequest();
     url = baseURL + "/organizations";
     req.open("POST", url, true);
 
-    let formData = new FormData(document.getElementById("createOrgForm"));
+    // let formData = new FormData(document.getElementById("createOrgForm"));
+    // console.log(formData);
 
-    console.log(formData);
+    let data = {};
+
+    orgForm.forEach( item => {
+        data[item.name] = item.value;
+    });
 
     req.onload = function () {
         console.log(req.response);
     }
 
-    req.send(formData);
-
-    
-
-    // orgForm.onClick = function(event) {
-    //     console.log("Inside orgForm.onSubmit");
-    //     event.preventDefault();
-
-    //     let req = new XMLHttpRequest();
-    //     url = baseURL + "/organizations";
-    //     req.open("POST", url, true);
-
-    //     let formData = new FormData(document.getElementById("createOrgForm"));
-    //     req.send(formData);
-
-    //     console.log(req.response);
-    // }
+    req.send(JSON.stringify(data));
 }
 
 
