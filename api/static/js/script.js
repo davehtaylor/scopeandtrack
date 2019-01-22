@@ -33,7 +33,19 @@ function getCountries() {
     req.open("GET", url, true);
 
     req.onload = function () {
-        let dropdown = document.getElementById("countrySelect")
+        let data = JSON.parse(this.response);
+
+        if (req.status == 200) {
+            let dropdown = document.getElementById("countrySelect");
+            
+            data.countries.forEach( country => {
+                dropdown[dropdown.length] = new Option(country.country_abbrev, country.country_abbrev);
+                console.log(country.country_abbrev);
+            });    
+        }
+        else {
+            console.log("Could not get countries");
+        }
     }
 
     req.send();
