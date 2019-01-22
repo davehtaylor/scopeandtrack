@@ -734,7 +734,9 @@ def verifyPassword(user, passToVerify):
 def getInfo(type):
     if type == "states":
         sts = states.query.all()
-        stateList = [s.toJSON() for s in sts]
+        for s in sts:
+            print(s.state_abbrev)
+        # stateList = [s.toJSON() for s in sts]
         return jsonify({"states": sts}), 200
     elif type == "countries":
         cntrs = [c.toJSON() for c in countries.query.all()]
