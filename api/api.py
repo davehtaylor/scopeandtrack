@@ -699,35 +699,10 @@ def dsdMachineByID(machineID):
 
 ###############################################################################
 #                                                                             #
-#                               Helper methods                                #
-#                                                                             #
-###############################################################################
-
-
-def hashPassword(user, passToHash):
-    """
-    Hash password for secure storage
-    """
-
-    return None
-
-
-def verifyPassword(user, passToVerify):
-    """
-    Verify passwords for login
-    """
-
-    if passToVerify == user.password:
-        return True
-
-    return False
-
-
-###############################################################################
-#                                                                             #
 #                             Helper endpoints                                #
 #                                                                             #
 ###############################################################################
+
 
 
 @app.route('/api/info/<type>', methods=["GET"])
@@ -744,9 +719,10 @@ def getInfo(type):
     return jsonify({"error": "Invalid request type. Accepted types are 'states' and 'countries'"}), 400
 
 
+
 ###############################################################################
 #                                                                             #
-#                             Main page endpoints                             #
+#                          Web frontend endpoints                             #
 #                                                                             #
 ###############################################################################
 
@@ -796,6 +772,13 @@ def profile():
     user = users.query.filter(users.username == session["username"]).first()
     return render_template("profile.html", user=user, title="Profile")
 
+
+
+###############################################################################
+#                                                                             #
+#                               Main execution                                #
+#                                                                             #
+###############################################################################
 
 
 if __name__ == "__main__":

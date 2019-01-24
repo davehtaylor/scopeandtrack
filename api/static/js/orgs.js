@@ -83,3 +83,25 @@ function getOrgByID(orgID) {
 
 
 }
+
+
+function showOrgModal() {
+    let modal = document.getElementById("orgModal");
+    if (modal.style.display == "none") {
+        modal.style.display = "block";
+    }
+}
+
+
+function closeModal() {
+    let modal = document.getElementById("orgModal");
+    modal.style.display = "none";
+}
+
+
+window.onclick = function(event) {
+    let modal = document.getElementById("orgModal");
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
