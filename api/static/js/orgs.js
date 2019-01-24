@@ -84,42 +84,25 @@ function getOrgByID(orgID) {
 
 }
 
-var modal = document.getElementById("orgModal");
-var button = document.getElementById("modalButton");
-var span = document.getElementById("close");
-
-button.onclick = function() {
-    modal.style.display = "block";
+function showOrgModal() {
+    console.log("showOrgModal() called");
+    let modal = document.getElementById("orgModal");
+    if (modal.style.display == "none") {
+        modal.style.display = "block";
+    }
 }
 
-span.onclick = function() {
+
+function closeModal() {
+    console.log("closeModal() called");
+    let modal = document.getElementById("orgModal");
     modal.style.display = "none";
 }
 
+
 window.onclick = function(event) {
+    let modal = document.getElementById("orgModal");
     if (event.target == modal) {
         modal.style.display = "none";
     }
 }
-// function showOrgModal() {
-//     console.log("showOrgModal() called");
-//     let modal = document.getElementById("orgModal");
-//     if (modal.style.display == "none") {
-//         modal.style.display = "block";
-//     }
-// }
-
-
-// function closeModal() {
-//     console.log("closeModal() called");
-//     let modal = document.getElementById("orgModal");
-//     modal.style.display = "none";
-// }
-
-
-// window.onclick = function(event) {
-//     let modal = document.getElementById("orgModal");
-//     if (event.target == modal) {
-//         modal.style.display = "none";
-//     }
-// }
