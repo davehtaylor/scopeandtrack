@@ -50,6 +50,7 @@ function getCountries() {
 }
 
 
+// Populate the state and country dropdowns when the page is loaded
 window.onload = function() {
     getStates();
     getCountries();
