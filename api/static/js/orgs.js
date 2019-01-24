@@ -86,6 +86,7 @@ function getOrgByID(orgID) {
 
 
 function showOrgModal() {
+    console.log("showOrgModal() called");
     let modal = document.getElementById("orgModal");
     if (modal.style.display == "none") {
         modal.style.display = "block";
@@ -94,6 +95,7 @@ function showOrgModal() {
 
 
 function closeModal() {
+    console.log("closeModal() called");
     let modal = document.getElementById("orgModal");
     modal.style.display = "none";
 }
