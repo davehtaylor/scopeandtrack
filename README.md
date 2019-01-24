@@ -12,3 +12,5 @@ Scope&Track will be driven primarily through an iPad application. Technicans wil
 - Logs for each consumable component in the process
 
 A web interface will also be used by the facility administration to create users, scopes, and DSD machines, view logs, and perform administrative tasks. 
+
+The API is being devleoped in Python with Flask and SQLAlchemy ORM. 
